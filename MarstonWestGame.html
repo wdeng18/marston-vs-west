@@ -17,7 +17,9 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 function preload() {
 
-    game.load.image('sky', 'assets/sky.png');
+    game.load.image('sky', 'assets/TestStage2.png');
+    //game.load.image('sky', 'assets/sky.png');
+
     //game.load.image('ground', 'assets/platform.png');
     //game.load.image('ground', 'assets/platform2.png');
     game.load.image('ground', 'assets/floorblock.png');
@@ -110,6 +112,7 @@ function create() {
 
     //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
+	//game.add.sprite(80, 0, 'sky');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group();
@@ -209,7 +212,6 @@ function update() {
 function hit()
 {
 	Player2.health=Player2.health-5;
-
 }
 
 //fighter class
@@ -243,9 +245,7 @@ function Fighter(character,health,lives,startx,starty,controlnum)
     this.character.body.bounce.y = 0;//0.2;
     this.character.body.gravity.y = 400;
     this.character.body.collideWorldBounds = false;
-
 	this.character.body.setSize(20, 42, 10, 0)
-
 
     this.character.animations.add('right', [2, 3, 0], 10, true);
     
@@ -463,16 +463,8 @@ function respawnEvent(Fighter){
     	}
 
     	//Makes character alpha to signify invulnerability
-
-    	if (Fighter.m <= 300){
-    		if (Fighter.m % 20 <= 5){
-    			Fighter.character.alpha = 1;
-    		}
-    		else {
-    			Fighter.character.alpha = 0.5;
-    		}
-    		
-
+    	if (Fighter.m <= 360){
+    		Fighter.character.alpha = 0.5;
     	}
     	else{
     		Fighter.character.alpha = 1;
