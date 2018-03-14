@@ -32,8 +32,8 @@ var loadState={
 				this.game.load.audio('creditsMusic', 'https://ufosc.github.io/marston-vs-west/States/assets/creditsTestMusic.ogg');
 				this.game.load.audio('menuMusic', 'https://ufosc.github.io/marston-vs-west/States/assets/menuTestMusic.ogg');
 				this.game.load.audio('allstar', 'https://ufosc.github.io/marston-vs-west/States/assets/allstar.ogg');
-				game.load.image('marstonPic', 'https://ufosc.github.io/marston-vs-west/States/assets/thegreatestlibrary.jpeg');
-				game.load.image('westPic', 'https://ufosc.github.io/marston-vs-west/States/assets/theworstlibrary.jpg');
+				game.load.image('marstonPic', 'https://ufosc.github.io/marston-vs-west/States/Assets/thegreatestlibrary.jpeg');
+				game.load.image('westPic', 'https://ufosc.github.io/marston-vs-west/States/Assets/theworstlibrary.jpg');
 				game.load.image('fullScreenButton', 'https://ufosc.github.io/marston-vs-west/States/assets/fullScreenButton.png');
 				game.load.image('displayButton1', 'https://ufosc.github.io/marston-vs-west/States/assets/displayButton1.png');
 				game.load.image('displayButton2', 'https://ufosc.github.io/marston-vs-west/States/assets/displayButton2.png');
