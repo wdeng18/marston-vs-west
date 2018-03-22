@@ -43,6 +43,8 @@ var loadState={
 				game.load.image('player2cssIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/player2cssIcon.png');
 				game.load.spritesheet('crowd', 'https://ufosc.github.io/marston-vs-west/States/Assets/dude.png', 32, 48);
 				//game.load.audio('playMusic', 'assets/playTestMusic.ogg');
+				game.load.image('dudeIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/dudeIcon.png');
+				game.load.image('chickIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/chickIcon.png');
 
 		},
 	create: function(){
