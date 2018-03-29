@@ -89,12 +89,12 @@ class Fighter {
        if(controlnum == 1)
        {
        this.controller1 = new Object;
-       controller1 = game.input.keyboard.addKeys({ 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R});
+       controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.E, 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R, 'shield': Phaser.KeyCode.Y, 'special': Phaser.KeyCode.F});
      }
      else if(controlnum == 2)
      {
      this.controller2 = new Object;
-     controller2 = game.input.keyboard.addKeys({ 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'punch': Phaser.KeyCode.P, 'kick': Phaser.KeyCode.O});
+     controller2 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.I, 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'punch': Phaser.KeyCode.P, 'kick': Phaser.KeyCode.O, 'shield': Phaser.KeyCode.OPEN_BRACKET, 'special': Phaser.KeyCode.J});
      }
 
 
@@ -236,7 +236,7 @@ else
 {
   Fighter.hitVelocity = 0;
 }
-  if (controller.down.isDown && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
+  if (controller.shield.isDown && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
   {
       Fighter.character.body.velocity.x = 0;
       Fighter.character.animations.play('shield');
@@ -284,7 +284,29 @@ else if (controller.punch.isDown && controller.punch.downDuration(80 + Fighter.a
     Fighter.shielding = false;
     Fighter.hitSwitchKick = true;
   }
-  else if (controller.up.isDown && Fighter.jumps <= 5 && controller.up.downDuration(80 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
+	
+  else if (controller.special.isDown && controller.up.isDown)
+  {
+  	console.log("Up Special");
+  }
+  else if (controller.special.isDown && controller.right.isDown)
+  {
+  	console.log("Right Special");
+  }
+  else if (controller.special.isDown && controller.left.isDown)
+  {
+  	console.log("Left Special");
+  }
+  else if (controller.special.isDown && controller.down.isDown)
+  {
+  	console.log("Down Special");
+  }
+  else if (controller.special.isDown)
+  {
+  	console.log("Normal Special")
+  }
+	
+  else if (controller.jump.isDown && Fighter.jumps <= 5 && controller.jump.downDuration(80 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
       Fighter.character.body.velocity.y = -350 + Fighter.jumpSpeed;
       Fighter.jumps += 1;
