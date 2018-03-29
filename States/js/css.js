@@ -46,20 +46,20 @@ var cssState={
     player1BodyIcon = game.add.sprite(game.world.width * .25, game.world.height * .75, '');
     player2BodyIcon = game.add.sprite(game.world.width * .75, game.world.height * .75, '');
 
+//TODO:Incorperate dragUpdate function event system into current system. I think it's needed to fix bugs/add dynamic features like spawning the character when hovering over while still dragging.
+//TODO:
+//find a way to change text, show sprite and name with alpha applied when hovering but NOT selecting character, SOLUTION: probably above comment
 
-//TODO: Create needed animations and spawn portrait and character sprite as well
-//find a way to change text, show sprite and name with alpha applied when hovering but NOT selecting character
-//Only make option to start game true if both players have selected characters
   },
   start: function(){
     music.stop();
-    console.log("overlap")
+
    game.state.start('play');
  },
  update: function() {
    player1Text.text = `Character selected 1: ${charName1}`;
    player2Text.text = `Character selected 2: ${charName2}`;
-
+//If the character is selected, play the selected animation
    game.physics.arcade.collide(player1Icon, player2Icon);
    if(player1BodyIcon.animations)
    {
@@ -94,13 +94,21 @@ var cssState={
    }
  },
  onDragStop: function() {
+
+//If you drop the curser on the icon
    if(game.physics.arcade.overlap(player1Icon, dudeIcon))
    {
+
+     //Determine's what's spawned, and lets you start game
      charName1 = "dude";
      charSelected1 = true;
+      //"select" dude, and change color of pic
      dudeIcon.tint =  0xffff00;
+     //destroys the old sprite so when you create a new one only one exists
      player1BodyIcon.kill();
-     player1BodyIcon = game.add.sprite(game.world.width * .25 -100, game.world.height * .5, 'dude');
+
+     player1BodyIcon = game.add.sprite(game.world.width * .25 - 100, game.world.height * .5, 'dude');
+
      player1BodyIcon.scale.setTo(3.5,3.5);
      player1BodyIcon.animations.add('idle', [0, 1], 5, true);
      player1BodyIcon.animations.add('kick', [6], 5, true);
@@ -111,15 +119,19 @@ var cssState={
    }
    else
    {
-     player1BodyIcon.kill();
+    // player1BodyIcon.kill();
    }
+
+   //If you drop the icon on the chick Picture
    if(game.physics.arcade.overlap(player1Icon, chickIcon))
    {
      charName1 = "chick";
      charSelected1 = true;
      chickIcon.tint =  0xffff00;
      player1BodyIcon.kill();
+
      player1BodyIcon = game.add.sprite(game.world.width * .25 - 100, game.world.height * .5, 'chick');
+
      player1BodyIcon.scale.setTo(3.5,3.5);
      player1BodyIcon.animations.add('idle', [0, 1], 5, true);
      player1BodyIcon.animations.add('kick', [6], 5, true);
@@ -128,22 +140,23 @@ var cssState={
        player1BodyIcon.alpha = 1;
      }
    }
-   else
-   {
-     player1BodyIcon.kill();
-   }
+
 
 
    if(game.physics.arcade.overlap(player2Icon,dudeIcon))
    {
      charName2 = "dude";
      charSelected2 = true;
-     chickIcon.tint =  0xffff00;
+     dudeIcon.tint =  0xffff00;
      player2BodyIcon.kill();
+
      player2BodyIcon = game.add.sprite(game.world.width * .75 - 100, game.world.height * .5, 'dude');
      player2BodyIcon.scale.setTo(3.5,3.5);
      player2BodyIcon.animations.add('idle', [0, 1], 5, true);
      player2BodyIcon.animations.add('kick', [6], 5, true);
+     player2BodyIcon.visible = true;
+
+
      if(player2BodyIcon.animations)
      {
        player2BodyIcon.alpha = 1;
@@ -151,8 +164,10 @@ var cssState={
    }
    else
    {
-     player2BodyIcon.kill();
+     //player2BodyIcon.kill();
    }
+
+
 
    if(game.physics.arcade.overlap(player2Icon,chickIcon))
    {
@@ -160,16 +175,28 @@ var cssState={
      charSelected2 = true;
      chickIcon.tint =  0xffff00;
      player2BodyIcon.kill();
+
      player2BodyIcon = game.add.sprite(game.world.width * .75 - 100, game.world.height * .5, 'chick');
      player2BodyIcon.scale.setTo(3.5,3.5);
      player2BodyIcon.animations.add('idle', [0, 1], 5, true);
      player2BodyIcon.animations.add('kick', [6], 5, true);
+
      if(player2BodyIcon.animations)
      {
        player2BodyIcon.alpha = 1;
      }
    }
    else
+   {
+    // player2BodyIcon.kill();
+   }
+
+   if(!game.physics.arcade.overlap(player1Icon,dudeIcon) && !game.physics.arcade.overlap(player1Icon,chickIcon))
+   {
+     player1BodyIcon.kill();
+   }
+
+   if(!game.physics.arcade.overlap(player2Icon,dudeIcon) && !game.physics.arcade.overlap(player2Icon,chickIcon))
    {
      player2BodyIcon.kill();
    }

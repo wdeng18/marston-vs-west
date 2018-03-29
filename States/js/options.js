@@ -1,6 +1,6 @@
 console.log("Reached options state");
 var optionsState={
-  //Plan to add: fullscreen, change aspect ratio, keyboard config?,
+  //Plan to add: fullscreen, change aspect ratio, keyboard config?, Toggle Items
    create: function(){
    	var nameLabel=game.add.text(80,80,'Options menu',{font: '50px Arial',fill: '#ffffff'});
    	var startLabel=game.add.text(80,game.world.height-40,'Under Construction',{font: '25px Arial',fill:'#ffffff'});
