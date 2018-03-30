@@ -13,8 +13,11 @@ var loadState={
 				game.load.image('star', 'assets/star.png');
 				//game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
-				game.load.spritesheet('dude', 'assets/Fighter1master.png', 36, 42);
-				game.load.spritesheet('chick', 'assets/Fighter2master.png', 36, 42);
+				//game.load.spritesheet('dude', 'assets/Fighter1master.png', 36, 42);
+				//game.load.spritesheet('chick', 'assets/Fighter2master.png', 36, 42);
+				game.load.spritesheet('dude', 'assets/TESTFIGHTER1.png', 64, 84);
+				game.load.spritesheet('chick', 'assets/TESTFIGHTER2.png', 64, 84);
+
 
 				game.load.image('hitboxTest', 'assets/testHitbox.png');
 				game.load.spritesheet('baddie', 'assets/baddie.png', 32, 32 );
