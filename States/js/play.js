@@ -58,7 +58,9 @@ class Fighter {
        this.character.body.bounce.y = 0;//0.2;
        this.character.body.gravity.y = 1000;
        this.character.body.collideWorldBounds = false;
-     this.character.body.setSize(20, 42, 10, 0)
+       
+       /*
+       this.character.body.setSize(20, 42, 10, 0)
 
        this.character.animations.add('right', [2, 3, 0], 10, true);
 
@@ -83,6 +85,32 @@ class Fighter {
 
        this.character.scale.x = 2;
        this.character.scale.y = 2;
+	*/
+
+	   this.character.body.setSize(30, 70, 10, 0)
+	   this.character.scale.x = 1.25;
+       this.character.scale.y = 1.25;
+
+	   this.character.animations.add('right', [ 3,4,5,6,7], 10, true);
+
+       //idle animation
+       this.character.animations.add('idle', [5, 6], 5, true);
+
+       //jump animation
+       this.character.animations.add('jump', [13, 14], 5, true); //need to adjust animation speed
+
+       //shield animation
+       this.character.animations.add('shield', [10], 5, true);
+
+       //punch animations
+       this.character.animations.add('punch', [6, 7, 8], 10, true);
+
+       //kick
+       this.character.animations.add('kick', [11, 12, 12, 12], 10, true);
+
+       //player got hit animation
+       this.character.animations.add('ko', [12], 5, true);
+
 
        //this.controller1 = game.input.keyboard.addKeys({ 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R});
 
@@ -314,7 +342,7 @@ else if (controller.punch.isDown && controller.punch.downDuration(80 + Fighter.a
   }
   else if (controller.left.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
-      //  Move to the left
+      
       if(Fighter.character.body.touching.down)
       {
         Fighter.jumps = 0;
@@ -398,7 +426,7 @@ else if (controller.punch.isDown && controller.punch.downDuration(80 + Fighter.a
       }
       else
       {
-        Fighter.character.animations.play('idle');
+        //Fighter.character.animations.play('idle');
       }
       Fighter.shielding = false;
 
