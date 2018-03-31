@@ -85,6 +85,7 @@ var cssState={
    {
      //Eventually allow the player to start game;
      gameReadyText.text = `Game ready`;
+     game.state.start('play');//temporary fix, edit later
 
    }
    else {
