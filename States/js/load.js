@@ -13,9 +13,12 @@ var loadState={
 				game.load.image('star', 'https://ufosc.github.io/marston-vs-west/States/Assets/star.png');
 				//game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
-				game.load.spritesheet('dude', 'https://ufosc.github.io/marston-vs-west/States/Assets/Fighter1master.png', 36, 42);
-				game.load.spritesheet('chick', 'https://ufosc.github.io/marston-vs-west/States/Assets/Fighter2master.png', 36, 42);
-
+				//game.load.spritesheet('dude', 'https://ufosc.github.io/marston-vs-west/States/Assets/Fighter1master.png', 36, 42);
+				//game.load.spritesheet('chick', 'https://ufosc.github.io/marston-vs-west/States/Assets/Fighter2master.png', 36, 42);
+				
+				game.load.spritesheet('dude', 'https://ufosc.github.io/marston-vs-west/States/Assets/TESTFIGHTER1.png', 64, 84);
+				game.load.spritesheet('chick', 'https://ufosc.github.io/marston-vs-west/States/Assets/TESTFIGHTER2.png', 64, 84);
+		
 				game.load.image('hitboxTest', 'https://ufosc.github.io/marston-vs-west/States/Assets/testHitbox.png');
 				game.load.spritesheet('baddie', 'https://ufosc.github.io/marston-vs-west/States/Assets/baddie.png', 32, 32 );
 				game.load.spritesheet('slash', 'https://ufosc.github.io/marston-vs-west/States/Assets/slash (1).png', 64, 64 );
@@ -24,6 +27,19 @@ var loadState={
 				game.load.spritesheet('bottle', 'https://ufosc.github.io/marston-vs-west/States/Assets/bottle.png', 32, 32 );
 				game.load.spritesheet('book', 'https://ufosc.github.io/marston-vs-west/States/Assets/book.png', 32, 32 );
 				game.load.spritesheet('Sandbag', 'https://ufosc.github.io/marston-vs-west/States/Assets/sandbag.png', 32, 32 );
+				
+				//Virtual controller assets
+				game.load.image('leftButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonLeft.png');
+				game.load.image('rightButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonRight.png');
+				game.load.image('upButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonUp.png');
+				game.load.image('downButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonDown.png');
+
+				game.load.image('aButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonA.png');
+				game.load.image('bButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonB.png');
+				game.load.image('xButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonX.png');
+				game.load.image('yButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/ButtonY.png');
+		
+				//Menu assets
 				game.load.image('startButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/startButton.png');
 				game.load.image('optionsButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/optionsButton.png');
 				game.load.image('quitButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/quitButton.png');
