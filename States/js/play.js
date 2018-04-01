@@ -250,7 +250,7 @@ class lab extends Fighter {
         this.jumpSpeed = 25;
         this.fallSpeed = 50;
         this.runSpeed = 50;
-        this.attackSpeed = 250;
+        this.attackSpeed = 1; //250;
         this.attackDmg = 1;
         this.moveSpeed = 200;
 
@@ -269,7 +269,7 @@ class dj extends Fighter {
         this.runSpeed = 50;
         this.attackSpeed = 1;
         this.attackDmg = 1;
-        this.moveSpeed = 2000;
+        this.moveSpeed = 250;
 
     }
 }
@@ -412,7 +412,7 @@ console.log('left!');
   {
       //logic to change direction facing
       if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -250 + Fighter.moveSpeed;
+        Fighter.character.body.velocity.x = -250 - Fighter.moveSpeed;
       }
       else
       {
@@ -432,7 +432,7 @@ console.log('left!');
 
       //logic to change direction facing
       if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -350 + Fighter.moveSpeed;
+        Fighter.character.body.velocity.x = -350 - Fighter.moveSpeed;
       }
       else
       {
@@ -625,7 +625,7 @@ else if(Fighter.controlnum > 0){
 
       //logic to change direction facing
       if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -350 + Fighter.moveSpeed;
+        Fighter.character.body.velocity.x = -350 - Fighter.moveSpeed;
       }
       else
       {
@@ -638,7 +638,7 @@ else if(Fighter.controlnum > 0){
       if(Fighter.character.body.touching.down)
       {
         Fighter.character.body.velocity.y = -200;
-    }
+      }
     Fighter.shielding = false;
     Fighter.hitSwitchKick = true;
   }
@@ -815,7 +815,8 @@ else if(Fighter.controlnum > 0){
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
       }
-	else if(Fighter.controlnum == -1 ){
+
+      else if(Fighter.controlnum == -1 ){
           console.log("controlnum = -1");
           //Fighter.character.body.position.x = 200;
           Fighter.character.x = 200;
@@ -823,7 +824,6 @@ else if(Fighter.controlnum > 0){
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
       }
-
 
       Fighter.health = 0;
       Fighter.lives += -1;
@@ -833,7 +833,7 @@ else if(Fighter.controlnum > 0){
 
   respawnEvent: function(Fighter){
     //Respawn Switch is activated during the KO function
-if (Fighter.respawnSwitch == true){
+    if (Fighter.respawnSwitch == true){
     Fighter.m += 1;
     //Invisible moment
     if (Fighter.m < 60 && Fighter.m != 0){
@@ -945,61 +945,67 @@ console.log("Pre Rando");
 
 
 /*
-  buttonleft = game.add.button(5, 472, 'leftButton', null, this, 0, 1, 0, 1);
-  buttonleft.events.onInputOver.add(function(){leftpress = true;});
-  buttonleft.events.onInputOut.add(function(){leftpress = false;});
-  buttonleft.events.onInputDown.add(function(){leftpress = true;});
-  buttonleft.events.onInputUp.add(function(){leftpress = false;});
-
+//event listener for player1 touch controls
+if(Player1.controlnum == -1){
+  Player1.controller1.buttonleft.events.onInputOver.add(function(){Player1.controller1.leftpress = true;});
+  Player1.controller1.buttonleft.events.onInputOut.add(function(){Player1.controller1.leftpress = false;});
+  Player1.controller1.buttonleft.events.onInputDown.add(function(){Player1.controller1.leftpress = true;});
+  Player1.controller1.buttonleft.events.onInputUp.add(function(){Player1.controller1.leftpress = false;});
+    
   //Right button
-  buttonright = game.add.button(75, 472, 'rightButton', null, this, 0, 1, 0, 1);
-  buttonright.events.onInputOver.add(function(){rightpress = true;});
-  buttonright.events.onInputOut.add(function(){rightpress = false;});
-  buttonright.events.onInputDown.add(function(){rightpress = true;});
-  buttonright.events.onInputUp.add(function(){rightpress = false;});
+  Player1.controller1.buttonright = game.add.button(75, 472, 'rightButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttonright.events.onInputOver.add(function(){Player1.controller1.rightpress = true;});
+  Player1.controller1.buttonright.events.onInputOut.add(function(){Player1.controller1.rightpress = false;});
+  Player1.controller1.buttonright.events.onInputDown.add(function(){Player1.controller1.rightpress = true;});
+  Player1.controller1.buttonright.events.onInputUp.add(function(){Player1.controller1.rightpress = false;});
 
   //Up button
-  buttonup = game.add.button(40, 442, 'upButton', null, this, 0, 1, 0, 1);
-  buttonup.events.onInputOver.add(function(){uppress = true;});
-  buttonup.events.onInputOut.add(function(){uppress = false;});
-  buttonup.events.onInputDown.add(function(){uppress = true;});
-  buttonup.events.onInputUp.add(function(){uppress = false;});
-  
+  Player1.controller1.buttonup = game.add.button(40, 442, 'upButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttonup.events.onInputOver.add(function(){Player1.controller1.uppress = true;});
+  Player1.controller1.buttonup.events.onInputOut.add(function(){Player1.controller1.uppress = false;});
+  Player1.controller1.buttonup.events.onInputDown.add(function(){Player1.controller1.uppress = true;});
+  Player1.controller1.buttonup.events.onInputUp.add(function(){Player1.controller1.uppress = false;});
+    
   //Down button
-  buttondown = game.add.button(40, 505, 'downButton', null, this, 0, 1, 0, 1);
-  buttondown.events.onInputOver.add(function(){downpress = true;});
-  buttondown.events.onInputOut.add(function(){downpress = false;});
-  buttondown.events.onInputDown.add(function(){downpress = true;});
-  buttondown.events.onInputUp.add(function(){downpress = false;});
+  Player1.controller1.buttondown = game.add.button(40, 505, 'downButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttondown.events.onInputOver.add(function(){Player1.controller1.downpress = true;});
+  Player1.controller1.buttondown.events.onInputOut.add(function(){Player1.controller1.downpress = false;});
+  Player1.controller1.buttondown.events.onInputDown.add(function(){Player1.controller1.downpress = true;});
+  Player1.controller1.buttondown.events.onInputUp.add(function(){Player1.controller1.downpress = false;});
 
+    
   //A button
-  buttona = game.add.button(720, 445, 'aButton', null, this, 0, 1, 0, 1);
-  buttona.events.onInputOver.add(function(){apress = true;});
-  buttona.events.onInputOut.add(function(){apress = false;});
-  buttona.events.onInputDown.add(function(){apress = true;});
-  buttona.events.onInputUp.add(function(){apress = false;});
+  Player1.controller1.buttona = game.add.button(720, 445, 'aButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttona.events.onInputOver.add(function(){Player1.controller1.apress = true;});
+  Player1.controller1.buttona.events.onInputOut.add(function(){Player1.controller1.apress = false;});
+  Player1.controller1.buttona.events.onInputDown.add(function(){Player1.controller1.apress = true;});
+  Player1.controller1.buttona.events.onInputUp.add(function(){Player1.controller1.apress = false;});
 
   //B button
-  buttonb = game.add.button(750, 475, 'bButton', null, this, 0, 1, 0, 1);
-  buttonb.events.onInputOver.add(function(){bpress = true;});
-  buttonb.events.onInputOut.add(function(){bpress = false;});
-  buttonb.events.onInputDown.add(function(){bpress = true;});
-  buttonb.events.onInputUp.add(function(){bpress = false;});
+  Player1.controller1.buttonb = game.add.button(750, 475, 'bButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttonb.events.onInputOver.add(function(){Player1.controller1.bpress = true;});
+  Player1.controller1.buttonb.events.onInputOut.add(function(){Player1.controller1.bpress = false;});
+  Player1.controller1.buttonb.events.onInputDown.add(function(){Player1.controller1.bpress = true;});
+  Player1.controller1.buttonb.events.onInputUp.add(function(){Player1.controller1.bpress = false;});
 
   //X button
-  buttonx = game.add.button(690, 475, 'xButton', null, this, 0, 1, 0, 1);
-  buttonx.events.onInputOver.add(function(){xpress = true;});
-  buttonx.events.onInputOut.add(function(){xpress = false;});
-  buttonx.events.onInputDown.add(function(){xpress = true;});
-  buttonx.events.onInputUp.add(function(){xpress = false;});
+  Player1.controller1.buttonx = game.add.button(690, 475, 'xButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttonx.events.onInputOver.add(function(){Player1.controller1.xpress = true;});
+  Player1.controller1.buttonx.events.onInputOut.add(function(){Player1.controller1.xpress = false;});
+  Player1.controller1.buttonx.events.onInputDown.add(function(){Player1.controller1.xpress = true;});
+  Player1.controller1.buttonx.events.onInputUp.add(function(){Player1.controller1.xpress = false;});
 
   //Y button
-  buttony = game.add.button(720, 505, 'yButton', null, this, 0, 1, 0, 1);
-  buttony.events.onInputOver.add(function(){ypress = true;});
-  buttony.events.onInputOut.add(function(){ypress = false;});
-  buttony.events.onInputDown.add(function(){ypress = true;});
-  buttony.events.onInputUp.add(function(){ypress = false;});
+  Player1.controller1.buttony = game.add.button(720, 505, 'yButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttony.events.onInputOver.add(function(){Player1.controller1.ypress = true;});
+  Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
+  Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
+  Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
+    
 
+
+  //end of event listeners
+}
 */
 
 
@@ -1041,12 +1047,11 @@ else
 
 //event listener for player1 touch controls
 if(Player1.controlnum == -1){
+  
   Player1.controller1.buttonleft.events.onInputOver.add(function(){Player1.controller1.leftpress = true;});
   Player1.controller1.buttonleft.events.onInputOut.add(function(){Player1.controller1.leftpress = false;});
   Player1.controller1.buttonleft.events.onInputDown.add(function(){Player1.controller1.leftpress = true;});
   Player1.controller1.buttonleft.events.onInputUp.add(function(){Player1.controller1.leftpress = false;});
-    
-    
     
   //Right button
   Player1.controller1.buttonright = game.add.button(105, 472, 'rightButton', null, this, 0, 1, 0, 1);
@@ -1097,6 +1102,9 @@ if(Player1.controlnum == -1){
   Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
   Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
   Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
+    
+
+
   //end of event listeners
 }
 
@@ -1108,7 +1116,6 @@ console.log(Player2.attackSpeed);
       bottle = this.item('bottle', 300, 200);
 
       mob = new crowd(0,0);
-
 
       healthtext1 = game.add.text(0,0, `DMG ${Player1.health}`,style);
 
@@ -1126,9 +1133,6 @@ console.log(Player2.attackSpeed);
     buttonleft.events.onInputDown.add(function(){leftpress = true;});
     buttonleft.events.onInputUp.add(function(){leftpress = false;});
     */
-
-
-
 
 
       //Pause 
