@@ -1048,58 +1048,55 @@ if(Player1.controlnum == -1){
     
     
     
-    //Right button
-  Player1.controller1.buttonright = game.add.button(75, 472, 'rightButton', null, this, 0, 1, 0, 1);
+  //Right button
+  Player1.controller1.buttonright = game.add.button(105, 472, 'rightButton', null, this, 0, 1, 0, 1);
   Player1.controller1.buttonright.events.onInputOver.add(function(){Player1.controller1.rightpress = true;});
   Player1.controller1.buttonright.events.onInputOut.add(function(){Player1.controller1.rightpress = false;});
   Player1.controller1.buttonright.events.onInputDown.add(function(){Player1.controller1.rightpress = true;});
   Player1.controller1.buttonright.events.onInputUp.add(function(){Player1.controller1.rightpress = false;});
 
-    //Up button
-  Player1.controller1.buttonup = game.add.button(40, 442, 'upButton', null, this, 0, 1, 0, 1);
+  //Up button
+  Player1.controller1.buttonup = game.add.button(55, 412, 'upButton', null, this, 0, 1, 0, 1);
   Player1.controller1.buttonup.events.onInputOver.add(function(){Player1.controller1.uppress = true;});
   Player1.controller1.buttonup.events.onInputOut.add(function(){Player1.controller1.uppress = false;});
   Player1.controller1.buttonup.events.onInputDown.add(function(){Player1.controller1.uppress = true;});
   Player1.controller1.buttonup.events.onInputUp.add(function(){Player1.controller1.uppress = false;});
     
-    //Down button
-  Player1.controller1.buttondown = game.add.button(40, 505, 'downButton', null, this, 0, 1, 0, 1);
+  //Down button
+  Player1.controller1.buttondown = game.add.button(55, 535, 'downButton', null, this, 0, 1, 0, 1);
   Player1.controller1.buttondown.events.onInputOver.add(function(){Player1.controller1.downpress = true;});
   Player1.controller1.buttondown.events.onInputOut.add(function(){Player1.controller1.downpress = false;});
   Player1.controller1.buttondown.events.onInputDown.add(function(){Player1.controller1.downpress = true;});
   Player1.controller1.buttondown.events.onInputUp.add(function(){Player1.controller1.downpress = false;});
 
     
-    //A button
-  Player1.controller1.buttona = game.add.button(720, 445, 'aButton', null, this, 0, 1, 0, 1);
+  //A button
+  Player1.controller1.buttona = game.add.button(685, 425, 'aButton', null, this, 0, 1, 0, 1);
   Player1.controller1.buttona.events.onInputOver.add(function(){Player1.controller1.apress = true;});
   Player1.controller1.buttona.events.onInputOut.add(function(){Player1.controller1.apress = false;});
   Player1.controller1.buttona.events.onInputDown.add(function(){Player1.controller1.apress = true;});
   Player1.controller1.buttona.events.onInputUp.add(function(){Player1.controller1.apress = false;});
 
-    //B button
-    Player1.controller1.buttonb = game.add.button(750, 475, 'bButton', null, this, 0, 1, 0, 1);
-    Player1.controller1.buttonb.events.onInputOver.add(function(){Player1.controller1.bpress = true;});
-    Player1.controller1.buttonb.events.onInputOut.add(function(){Player1.controller1.bpress = false;});
-    Player1.controller1.buttonb.events.onInputDown.add(function(){Player1.controller1.bpress = true;});
-    Player1.controller1.buttonb.events.onInputUp.add(function(){Player1.controller1.bpress = false;});
+  //B button
+  Player1.controller1.buttonb = game.add.button(735, 475, 'bButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttonb.events.onInputOver.add(function(){Player1.controller1.bpress = true;});
+  Player1.controller1.buttonb.events.onInputOut.add(function(){Player1.controller1.bpress = false;});
+  Player1.controller1.buttonb.events.onInputDown.add(function(){Player1.controller1.bpress = true;});
+  Player1.controller1.buttonb.events.onInputUp.add(function(){Player1.controller1.bpress = false;});
 
-    //X button
-    Player1.controller1.buttonx = game.add.button(690, 475, 'xButton', null, this, 0, 1, 0, 1);
-    Player1.controller1.buttonx.events.onInputOver.add(function(){Player1.controller1.xpress = true;});
-    Player1.controller1.buttonx.events.onInputOut.add(function(){Player1.controller1.xpress = false;});
-    Player1.controller1.buttonx.events.onInputDown.add(function(){Player1.controller1.xpress = true;});
-    Player1.controller1.buttonx.events.onInputUp.add(function(){Player1.controller1.xpress = false;});
+  //X button
+  Player1.controller1.buttonx = game.add.button(635, 475, 'xButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttonx.events.onInputOver.add(function(){Player1.controller1.xpress = true;});
+  Player1.controller1.buttonx.events.onInputOut.add(function(){Player1.controller1.xpress = false;});
+  Player1.controller1.buttonx.events.onInputDown.add(function(){Player1.controller1.xpress = true;});
+  Player1.controller1.buttonx.events.onInputUp.add(function(){Player1.controller1.xpress = false;});
 
-    //Y button
-    Player1.controller1.buttony = game.add.button(720, 505, 'yButton', null, this, 0, 1, 0, 1);
-    Player1.controller1.buttony.events.onInputOver.add(function(){Player1.controller1.ypress = true;});
-    Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
-    Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
-    Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
-    
-
-
+  //Y button
+  Player1.controller1.buttony = game.add.button(685, 525, 'yButton', null, this, 0, 1, 0, 1);
+  Player1.controller1.buttony.events.onInputOver.add(function(){Player1.controller1.ypress = true;});
+  Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
+  Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
+  Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
   //end of event listeners
 }
 
