@@ -815,6 +815,15 @@ else if(Fighter.controlnum > 0){
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
       }
+	else if(Fighter.controlnum == -1 ){
+          console.log("controlnum = -1");
+          //Fighter.character.body.position.x = 200;
+          Fighter.character.x = 200;
+          Fighter.character.y = 300;
+          Fighter.respawnSwitch = true;
+          Fighter.m = 0;
+      }
+
 
       Fighter.health = 0;
       Fighter.lives += -1;
