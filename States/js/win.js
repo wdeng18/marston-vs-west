@@ -7,6 +7,10 @@ var winState={
     {
       var winLabel=game.add.text(80,80,'Player 1 won!',{font: '50px Arial',fill: '#ffffff'});
     }
+    else if(Player1.lives = Player2.lives)
+    {
+      var winLabel=game.add.text(80,80,"It's a tie",{font: '50px Arial',fill: '#ffffff'});
+    }
     else
     {
       var winLabel=game.add.text(80,80,'Player 2 won!',{font: '50px Arial',fill: '#ffffff'});
@@ -16,6 +20,11 @@ var winState={
     var startLabel=game.add.text(80,game.world.height-80,'Press "W" key to restart',{font: '25px Arial',fill:'#ffffff'});
     var wkey= game.input.keyboard.addKey(Phaser.Keyboard.W);
     wkey.onDown.addOnce(this.start,this);
+    if(game.device.android || game.device.iOS)
+    {
+      menuButton = game.add.button(game.world.width *.5,game.world.height * - 100, 'menuButton');
+      menuButton.onInputUp.add(this.start,this);
+    }
   },
   start: function(){
     music.stop();

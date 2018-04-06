@@ -16,87 +16,22 @@ class crowd{
 //Virtual pad
 class vpad{
   constructor(controlnum)
-  //constructor()
+
   {
 
   this.controlnum = controlnum;
-  //console.log('inside constructor');
+
   //Virtual controller variables
   this.leftpress = false;
   this.rightpress = false;
   this.uppress = false;
   this.downpress = false;
 
-  //var jump = false;
   this.apress = false;//regular attack button
   this.bpress = false;//special button
   this.xpress = false;//jump button
   this.ypress = false;//block button
 
-
-  //button creation
-  //Virtual pad
-
-  //console.log('about to make button');
-
-  //this.buttonleft = game.add.button(5, 472, 'leftButton', null, this, 0, 1, 0, 1);
-  /*this.buttonleft.events.onInputOver.add(function(){this.leftpress = true;});
-  this.buttonleft.events.onInputOut.add(function(){this.leftpress = false;});
-  this.buttonleft.events.onInputDown.add(function(){this.leftpress = true;});
-  this.buttonleft.events.onInputUp.add(function(){this.leftpress = false;});
-  */
-
-  /*
-  //Right button
-  this.buttonright = game.add.button(75, 472, 'rightButton', null, this, 0, 1, 0, 1);
-  this.buttonright.events.onInputOver.add(function(){this.rightpress = true;});
-  this.buttonright.events.onInputOut.add(function(){this.rightpress = false;});
-  this.buttonright.events.onInputDown.add(function(){this.rightpress = true;});
-  this.buttonright.events.onInputUp.add(function(){this.rightpress = false;});
-
-  //Up button
-  this.buttonup = game.add.button(40, 442, 'upButton', null, this, 0, 1, 0, 1);
-  this.buttonup.events.onInputOver.add(function(){this.uppress = true;});
-  this.buttonup.events.onInputOut.add(function(){this.uppress = false;});
-  this.buttonup.events.onInputDown.add(function(){this.uppress = true;});
-  this.buttonup.events.onInputUp.add(function(){this.uppress = false;});
-
-  //Down button
-  this.buttondown = game.add.button(40, 505, 'downButton', null, this, 0, 1, 0, 1);
-  this.buttondown.events.onInputOver.add(function(){this.downpress = true;});
-  this.buttondown.events.onInputOut.add(function(){this.downpress = false;});
-  this.buttondown.events.onInputDown.add(function(){this.downpress = true;});
-  this.buttondown.events.onInputUp.add(function(){this.downpress = false;});
-
-
-  //A button
-  this.buttona = game.add.button(720, 445, 'aButton', null, this, 0, 1, 0, 1);
-  this.buttona.events.onInputOver.add(function(){this.apress = true;});
-  this.buttona.events.onInputOut.add(function(){this.apress = false;});
-  this.buttona.events.onInputDown.add(function(){this.apress = true;});
-  this.buttona.events.onInputUp.add(function(){this.apress = false;});
-
-  //B button
-  this.buttonb = game.add.button(750, 475, 'bButton', null, this, 0, 1, 0, 1);
-  this.buttonb.events.onInputOver.add(function(){this.bpress = true;});
-  this.buttonb.events.onInputOut.add(function(){this.bpress = false;});
-  this.buttonb.events.onInputDown.add(function(){this.bpress = true;});
-  this.buttonb.events.onInputUp.add(function(){this.bpress = false;});
-
-  //X button
-  this.buttonx = game.add.button(690, 475, 'xButton', null, this, 0, 1, 0, 1);
-  this.buttonx.events.onInputOver.add(function(){this.xpress = true;});
-  this.buttonx.events.onInputOut.add(function(){this.xpress = false;});
-  this.buttonx.events.onInputDown.add(function(){this.xpress = true;});
-  this.buttonx.events.onInputUp.add(function(){this.xpress = false;});
-
-  //Y button
-  this.buttony = game.add.button(720, 505, 'yButton', null, this, 0, 1, 0, 1);
-  this.buttony.events.onInputOver.add(function(){this.ypress = true;});
-  this.buttony.events.onInputOut.add(function(){this.ypress = false;});
-  this.buttony.events.onInputDown.add(function(){this.ypress = true;});
-  this.buttony.events.onInputUp.add(function(){this.ypress = false;});
-  */
   }
   //end of vpad class
 }
@@ -149,33 +84,6 @@ class Fighter {
        this.character.body.gravity.y = 1000;
        this.character.body.collideWorldBounds = false;
 
-       /*
-       this.character.body.setSize(20, 42, 10, 0)
-
-       this.character.animations.add('right', [2, 3, 0], 10, true);
-
-       //idle animation
-       this.character.animations.add('idle', [0, 1], 5, true);
-
-       //jump animation
-       this.character.animations.add('jump', [8, 9], 5, true); //need to adjust animation speed
-
-       //shield animation
-       this.character.animations.add('shield', [7], 5, true);
-
-       //punch animations
-       this.character.animations.add('punch', [5], 5, true);
-
-       //kick
-       this.character.animations.add('kick', [6], 1, true);
-
-       //player got hit animation
-       this.character.animations.add('ko', [10], 5, true);
-
-
-       this.character.scale.x = 2;
-       this.character.scale.y = 2;
-	*/
 
 	   this.character.body.setSize(30, 70, 10, 0)
 	   this.character.scale.x = 1.25;
@@ -216,24 +124,14 @@ class Fighter {
      this.controller1 = new Object;
      controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.I, 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'punch': Phaser.KeyCode.P, 'kick': Phaser.KeyCode.O, 'shield': Phaser.KeyCode.OPEN_BRACKET, 'special': Phaser.KeyCode.J});
      }
-     else if(controlnum == -1){
-      //this.controller1 = new Object;
-      //console.log("vpad!!");
+     else if(controlnum == -1)
+     {
       this.controller1 = new vpad(-1);
-      //console.log("vpad made!!");
      }
-      else if(controlnum == -2){
-      //this.controller1 = new Object;
-      //console.log("vpad!!");
+      else if(controlnum == -2)
+      {
       this.controller1 = new vpad(-2);
-      //console.log("vpad made!!");
-     }
-
-
-
-
-
-
+      }
 
        this.weapon1 = game.add.weapon(1, 'slash');
        this.weapon1.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
@@ -241,6 +139,39 @@ class Fighter {
        this.weapon1.bulletSpeed = 0; //0
        this.weapon1.fireRate = 100;
        this.weapon1.trackSprite(this.character, 28, 40, true);
+
+       this.stocks = game.add.group();
+
+       for (var g = 3; g > 0; g--)
+       {
+
+         if(controlnum == -1) //For the vpad
+         {
+           var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
+           stock.anchor.setTo(.5,.5);
+
+         }
+         else if(controlnum == 1)
+         {
+           var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
+           stock.anchor.setTo(.5,.5);
+         }
+      }
+      for(var h = 0; h < 3; h++)
+      {
+         if(controlnum == 2)
+         {
+           var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
+           stock.anchor.setTo(.5,.5);
+
+         }
+         else if(controlnum == -2) //For the bot
+         {
+           var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
+           stock.anchor.setTo(.5,.5);
+
+         }
+       }
 
        return this;
      }
@@ -290,9 +221,7 @@ var playState={
     hitSound.play();
 		Player1.health = Player1.health + (2/3) + (0.1 * (Player1.health * 0.1));
 		Player1.hitVelocity = Player2.character.scale.x * Player1.health * 2;
-    //console.log("Before call")
-      //  Player1.character.body.velocity.y = this.yHitVelocity(Player1);
-        //console.log("after call")
+
          Player1.character.body.velocity.y = -(Math.pow(Player1.health, 1.25));
 
         if (Player1.health >= 0 || Player1.health <= 75)
@@ -318,10 +247,10 @@ hitPlayer2: function(){
 
 	if (Player2.m == 0 && !Player2.shielding){
       hitSound.play();
-		//Player2.health = Player2.health + (1/3) + (0.1 * (Player2.health * 0.1));
+
 		Player2.health = Player2.health + (2/3) + (0.1 * (Player2.health * 0.1));
 		Player2.hitVelocity = Player1.character.scale.x * Player2.health * 2;
-    //this.yHitVelocity(Player2);
+
      Player2.character.body.velocity.y = -(Math.pow(Player2.health, 1.25));
      if (Player2.health >= 0 || Player2.health <= 75)
      {
@@ -377,37 +306,9 @@ else
 //control logic for virtual keys
 if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
 
-//console.log('inside vpad reads');
 if (Fighter.controller1.leftpress == true){
-//console.log(Fighter.controller1.leftpress);
-//console.log('left!');
+
 }
-
-
-//virtual pad test
-
-    /*if (Fighter.controller1.leftpress == true) {
-      //Player1.scale.x = -1;
-      //this.Player1.body.moveLeft(500);
-
-      if (Fighter.character.scale.x > 0 ){
-      Fighter.character.scale.x *=-1;
-      Fighter.weapon1.trackSprite(Fighter.character, 28, -40, true);
-      }
-      console.log('Moving left');
-      Fighter.character.animations.play('right');
-      //Player1.animations.play('right');
-    }
-    else if(Fighter.controller1.rightpress == true){
-
-
-      if (Fighter.character.scale.x < 0 ){
-      Fighter.character.scale.x *=-1;
-      Fighter.weapon1.trackSprite(Fighter.character, 28, 40, true);
-      }
-      console.log('Moving right');
-      Fighter.character.animations.play('right');
-    }*/
 
   if (Fighter.controller1.xpress && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
   {
@@ -428,11 +329,10 @@ if (Fighter.controller1.leftpress == true){
       }
       Fighter.character.animations.play('punch');
       Fighter.weapon1.fire();
-      //Fighter.hitCD = 30;
+
       Fighter.shielding = false;
       Fighter.hitSwitchPunch = true;
-      //Causes Player health to increase
-      //Fighter.health += 1;
+
   }
   else if (Fighter.controller1.bpress == true && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
   {
@@ -591,11 +491,6 @@ if (Fighter.controller1.leftpress == true){
     Fighter.hitCD = 15;
     Fighter.hitSwitchKick= false;
   }
-
-
-
-
-
     //console.log('end of vpad read');
 }
 
@@ -807,13 +702,9 @@ else if(Fighter.controlnum > 0){
       console.log("Beginning of respawn");
       game.time.events.add(Phaser.Timer.SECOND, this.playRespawnSound, this);
 
-      //this.Fighter = Fighter;
-      var test = Fighter.controlnum;
-      console.log(Fighter);
 
       if(Fighter.controlnum == 1 ){
           console.log("controlnum = 1");
-          //Fighter.character.body.position.x = 200;
           Fighter.character.x = 200;
           Fighter.character.y = 300;
           Fighter.respawnSwitch = true;
@@ -910,11 +801,21 @@ playerHitStun: function(Fighter)
   KO:function(Fighter){
       if(Fighter.character.body.position.x < -50 || Fighter.character.body.position.x > 900){
          deathSound.play();
+         var live = Fighter.stocks.getFirstAlive();
+         if(live)
+         {
+           live.kill();
+         }
          this.respawn(Fighter);
 
       }
       else if(Fighter.character.body.position.y > 700 || Fighter.character.body.position.y < -100){
          deathSound.play();
+         var live = Fighter.stocks.getFirstAlive();
+         if(live)
+         {
+           live.kill();
+         }
          this.respawn(Fighter);
       }
   },
@@ -962,96 +863,37 @@ playerHitStun: function(Fighter)
 
       //  This stops it from falling away when you jump on it
       ground.body.immovable = true;
-console.log("Pre Rando");
-//rando = new vpad(-1);
 
-
-/*
-//event listener for player1 touch controls
-if(Player1.controlnum == -1){
-  Player1.controller1.buttonleft.events.onInputOver.add(function(){Player1.controller1.leftpress = true;});
-  Player1.controller1.buttonleft.events.onInputOut.add(function(){Player1.controller1.leftpress = false;});
-  Player1.controller1.buttonleft.events.onInputDown.add(function(){Player1.controller1.leftpress = true;});
-  Player1.controller1.buttonleft.events.onInputUp.add(function(){Player1.controller1.leftpress = false;});
-
-  //Right button
-  Player1.controller1.buttonright = game.add.button(75, 472, 'rightButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttonright.events.onInputOver.add(function(){Player1.controller1.rightpress = true;});
-  Player1.controller1.buttonright.events.onInputOut.add(function(){Player1.controller1.rightpress = false;});
-  Player1.controller1.buttonright.events.onInputDown.add(function(){Player1.controller1.rightpress = true;});
-  Player1.controller1.buttonright.events.onInputUp.add(function(){Player1.controller1.rightpress = false;});
-
-  //Up button
-  Player1.controller1.buttonup = game.add.button(40, 442, 'upButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttonup.events.onInputOver.add(function(){Player1.controller1.uppress = true;});
-  Player1.controller1.buttonup.events.onInputOut.add(function(){Player1.controller1.uppress = false;});
-  Player1.controller1.buttonup.events.onInputDown.add(function(){Player1.controller1.uppress = true;});
-  Player1.controller1.buttonup.events.onInputUp.add(function(){Player1.controller1.uppress = false;});
-
-  //Down button
-  Player1.controller1.buttondown = game.add.button(40, 505, 'downButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttondown.events.onInputOver.add(function(){Player1.controller1.downpress = true;});
-  Player1.controller1.buttondown.events.onInputOut.add(function(){Player1.controller1.downpress = false;});
-  Player1.controller1.buttondown.events.onInputDown.add(function(){Player1.controller1.downpress = true;});
-  Player1.controller1.buttondown.events.onInputUp.add(function(){Player1.controller1.downpress = false;});
-
-
-  //A button
-  Player1.controller1.buttona = game.add.button(720, 445, 'aButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttona.events.onInputOver.add(function(){Player1.controller1.apress = true;});
-  Player1.controller1.buttona.events.onInputOut.add(function(){Player1.controller1.apress = false;});
-  Player1.controller1.buttona.events.onInputDown.add(function(){Player1.controller1.apress = true;});
-  Player1.controller1.buttona.events.onInputUp.add(function(){Player1.controller1.apress = false;});
-
-  //B button
-  Player1.controller1.buttonb = game.add.button(750, 475, 'bButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttonb.events.onInputOver.add(function(){Player1.controller1.bpress = true;});
-  Player1.controller1.buttonb.events.onInputOut.add(function(){Player1.controller1.bpress = false;});
-  Player1.controller1.buttonb.events.onInputDown.add(function(){Player1.controller1.bpress = true;});
-  Player1.controller1.buttonb.events.onInputUp.add(function(){Player1.controller1.bpress = false;});
-
-  //X button
-  Player1.controller1.buttonx = game.add.button(690, 475, 'xButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttonx.events.onInputOver.add(function(){Player1.controller1.xpress = true;});
-  Player1.controller1.buttonx.events.onInputOut.add(function(){Player1.controller1.xpress = false;});
-  Player1.controller1.buttonx.events.onInputDown.add(function(){Player1.controller1.xpress = true;});
-  Player1.controller1.buttonx.events.onInputUp.add(function(){Player1.controller1.xpress = false;});
-
-  //Y button
-  Player1.controller1.buttony = game.add.button(720, 505, 'yButton', null, this, 0, 1, 0, 1);
-  Player1.controller1.buttony.events.onInputOver.add(function(){Player1.controller1.ypress = true;});
-  Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
-  Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
-  Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
-
-
-
-  //end of event listeners
-}
-*/
-
-
-console.log("Post Rando");
 hitSound = game.add.audio('hitSound');
 respawnSound = game.add.audio('respawnSound');
 deathSound = game.add.audio('deathSound');
 jumpSound = game.add.audio('jumpSound');
 
+if(game.device.android || game.device.iOS)
+{
+  //If on mobile, use the vpad as input for player 1,
+  controlOptionVpad = -1;
+}
+else {
+  //If on desktop, do not use virtual inputs for player 1.
+  controlOptionVpad = 1;
+}
+
 
 if(charName1 == 'dude')
 {
-  Player1 =  new dj(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,-1);
+  Player1 =  new dj(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,controlOptionVpad);
   console.log(Player1);
   console.log("Player 1 is dj");
 }
 else if(charName1 == 'chick')
 {
-  Player1 =  new lab(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,-1);
+  Player1 =  new lab(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,controlOptionVpad);
   console.log("Player 1 is lab");
 }
 else
 {
-  Player1 =  new lab(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,-1);
+  Player1 =  new lab(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,controlOptionVpad);
   console.log("Player 1 is lab");
 }
 
@@ -1129,17 +971,8 @@ if(Player1.controlnum == -1){
   Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
   Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
 
-
-
   //end of event listeners
 }
-
-
-console.log(Player1.attackSpeed);
-console.log(Player2.attackSpeed);
-
-
-      //bottle = this.item('bottle', 300, 200);
 
       mob = new crowd(0,0);
 
@@ -1150,16 +983,6 @@ console.log(Player2.attackSpeed);
       livetext1 = game.add.text(0,30, `Lives ${Player1.lives}`,style);
 
       livetext2 = game.add.text(650,30, `Lives ${Player2.lives}`,style);
-
-    /*
-    //Virtual pad
-    buttonleft = game.add.button(0, 472, 'leftButton', null, this, 0, 1, 0, 1);
-	  buttonleft.events.onInputOver.add(function(){leftpress = true;});
-    buttonleft.events.onInputOut.add(function(){leftpress = false;});
-    buttonleft.events.onInputDown.add(function(){leftpress = true;});
-    buttonleft.events.onInputUp.add(function(){leftpress = false;});
-    */
-
 
       //Pause
       pauseLabel = game.add.text(game.world.width * .5, game.world.height * .15, 'Pause', {font: '50px Arial',fill: '#ffffff'});
@@ -1246,25 +1069,15 @@ timerText.anchor.setTo(.5,.5);
 
     game.physics.arcade.overlap(Player1.weapon1.bullets, Player2.character, this.hitPlayer2);
 	game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1);
-  	//overlap(object1, object2, overlapCallback, processCallback, callbackContext)
-    //Enable items collisions
-    //game.physics.arcade.collide(bottle.type, platforms);
-    //game.physics.arcade.collide(Player1.character, bottle.type);
-  	//game.physics.arcade.collide(Player2.character, bottle.type);
 
-
-  	//uncomment for a AI track player test
-    //this.AIdistcheck(Player1,Player2);
-    
-  	this.AIplay(Player1,Player2);
+if(controlOptionAI == -2)
+{
+  this.AIplay(Player1, Player2);
+}
 
     this.updateInput(Player1,cooldown1);
 
     this.updateInput(Player2,cooldown2);
-    //console.log('input update succesful');
-    //this.crowdupdate(mob);
-
-    
 
     healthtext1.text = `DMG ${Math.ceil(Player1.health)} %`;
     healthtext2.text = `DMG ${Math.ceil(Player2.health)} %`;
@@ -1272,8 +1085,6 @@ timerText.anchor.setTo(.5,.5);
     livetext1.text = `Lives ${Player1.lives}`;
     livetext2.text = `Lives ${Player2.lives}`;
 
-
-    //healthtext2 = game.add.text(690,0, `Lives ${Player2.health}`,style);
     this.KO(Player1);
     this.KO(Player2);
 
@@ -1321,8 +1132,6 @@ timerText.anchor.setTo(.5,.5);
   	console.log("jump?");
   	Fighter2.character.body.velocity.y = -100;
   }
-  //console.log(Fighter2.character.body.position.x -Fighter1.character.body.position.x);
-  //Fighter1.body.;
 
  },
 
@@ -1330,27 +1139,7 @@ AIplay: function(Fighter1,Fighter2){
 
 	AIxdist = Fighter2.character.body.position.x -Fighter1.character.body.position.x;
 	AIydist =  Fighter2.character.body.position.y -Fighter1.character.body.position.y;
-	
-	//make sure AI is always facing player?
-	/*if(Fighter1.scale.x == Fighter2.scale.x){
-		Fighter2.scale.x = Fighter2.scale.x*-1;
-	}*/
 
-	//movement logic
-	/*if(AIxdist > 50){
-  		//Fighter2.character.body.velocity.x = -150;
-	  	Fighter2.controller1.leftpress = true;
-	  	//controller2.right.isDown == true;
-		console.log("AI should be moving left");
-	}
-    else if(AIxdist < -50){
-  		Fighter2.controller1.rightpress = true;
-    }
-    else{
-  		Fighter2.controller1.leftpress = false;
-  		Fighter2.controller1.rightpress = false;
-    }
-	*/
 	  //attack logic
 	if(AIxdist < 60 && AIxdist > 0 ){
 	  	Fighter2.controller1.apress = true;
@@ -1363,22 +1152,6 @@ AIplay: function(Fighter1,Fighter2){
 	  	Fighter2.controller1.apress = false;
 	}
 
-	//more attack logic
-	//if(AIxdist < 50 && AIxdist > 0 && Fighter1.health > 30){
-	/*if(AIxdist < 50 && AIxdist > 0 && Fighter1.health > 30){
-	  	Fighter2.controller1.apress = true;
-	  	//console.log("punch!");
-	}
-	else if(AIxdist > -50 && AIxdist < 0 && Fighter1.health > 30){
-	    Fighter2.controller1.apress = true;
-	}
-	else{
-	  	Fighter2.controller1.apress = false;
-	  	Fighter2.controller1.bpress = false;
-	}*/
-
-	
-
 	  //jump logic
 	if(AIydist > 100 || Fighter2.character.body.position.y < 40){
 	  	//console.log("jump?");
@@ -1389,7 +1162,6 @@ AIplay: function(Fighter1,Fighter2){
 	  	Fighter2.controller1.ypress = false;
 	}
 
-	//console.log(Fighter2.character.body.position.x);
 	//avoid going out of bounds
 	if(Fighter2.character.body.position.x < 200){
 		Fighter2.controller1.rightpress = true;
@@ -1397,7 +1169,7 @@ AIplay: function(Fighter1,Fighter2){
 	}
 	else if(Fighter2.character.body.position.x > 400){
 		Fighter2.controller1.leftpress = true;
-		//console.log("Avoid right bound");	
+		//console.log("Avoid right bound");
 	}
 	else{
 		//temporary fix need to remove later
