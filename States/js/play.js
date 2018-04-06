@@ -290,9 +290,9 @@ var playState={
     hitSound.play();
 		Player1.health = Player1.health + (2/3) + (0.1 * (Player1.health * 0.1));
 		Player1.hitVelocity = Player2.character.scale.x * Player1.health * 2;
-    console.log("Before call")
+    //console.log("Before call")
       //  Player1.character.body.velocity.y = this.yHitVelocity(Player1);
-        console.log("after call")
+        //console.log("after call")
          Player1.character.body.velocity.y = -(Math.pow(Player1.health, 1.25));
 
         if (Player1.health >= 0 || Player1.health <= 75)
@@ -380,7 +380,7 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
 //console.log('inside vpad reads');
 if (Fighter.controller1.leftpress == true){
 //console.log(Fighter.controller1.leftpress);
-console.log('left!');
+//console.log('left!');
 }
 
 
@@ -839,7 +839,7 @@ else if(Fighter.controlnum > 0){
       else if(Fighter.controlnum == -2 ){
           console.log("controlnum = -2");
           //Fighter.character.body.position.x = 200;
-          Fighter.character.x = 200;
+          Fighter.character.x = 600;
           Fighter.character.y = 300;
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
@@ -1139,7 +1139,7 @@ console.log(Player1.attackSpeed);
 console.log(Player2.attackSpeed);
 
 
-      bottle = this.item('bottle', 300, 200);
+      //bottle = this.item('bottle', 300, 200);
 
       mob = new crowd(0,0);
 
@@ -1248,10 +1248,15 @@ timerText.anchor.setTo(.5,.5);
 	game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1);
   	//overlap(object1, object2, overlapCallback, processCallback, callbackContext)
     //Enable items collisions
-    game.physics.arcade.collide(bottle.type, platforms);
-    game.physics.arcade.collide(Player1.character, bottle.type);
-  	game.physics.arcade.collide(Player2.character, bottle.type);
+    //game.physics.arcade.collide(bottle.type, platforms);
+    //game.physics.arcade.collide(Player1.character, bottle.type);
+  	//game.physics.arcade.collide(Player2.character, bottle.type);
 
+
+  	//uncomment for a AI track player test
+    //this.AIdistcheck(Player1,Player2);
+    
+  	this.AIplay(Player1,Player2);
 
     this.updateInput(Player1,cooldown1);
 
@@ -1259,9 +1264,7 @@ timerText.anchor.setTo(.5,.5);
     //console.log('input update succesful');
     //this.crowdupdate(mob);
 
-    //uncomment for a AI track player test
-    //this.AIdistcheck(Player1,Player2);
-    this.AIplay(Player1,Player2);
+    
 
     healthtext1.text = `DMG ${Math.ceil(Player1.health)} %`;
     healthtext2.text = `DMG ${Math.ceil(Player2.health)} %`;
@@ -1328,42 +1331,80 @@ AIplay: function(Fighter1,Fighter2){
 	AIxdist = Fighter2.character.body.position.x -Fighter1.character.body.position.x;
 	AIydist =  Fighter2.character.body.position.y -Fighter1.character.body.position.y;
 	
+	//make sure AI is always facing player?
+	/*if(Fighter1.scale.x == Fighter2.scale.x){
+		Fighter2.scale.x = Fighter2.scale.x*-1;
+	}*/
+
 	//movement logic
-	 if(AIxdist > 50){
-  	//Fighter2.character.body.velocity.x = -150;
-  	Fighter2.controller1.leftpress = true;
-  	//controller2.right.isDown == true;
-  	console.log("AI should be moving left");
-  }
-  else if(AIxdist < -50){
-  	Fighter2.controller1.rightpress = true;
-  }
-  else{
-  	Fighter2.controller1.leftpress = false;
-  	Fighter2.controller1.rightpress = false;
-  }
+	/*if(AIxdist > 50){
+  		//Fighter2.character.body.velocity.x = -150;
+	  	Fighter2.controller1.leftpress = true;
+	  	//controller2.right.isDown == true;
+		console.log("AI should be moving left");
+	}
+    else if(AIxdist < -50){
+  		Fighter2.controller1.rightpress = true;
+    }
+    else{
+  		Fighter2.controller1.leftpress = false;
+  		Fighter2.controller1.rightpress = false;
+    }
+	*/
+	  //attack logic
+	if(AIxdist < 60 && AIxdist > 0 ){
+	  	Fighter2.controller1.apress = true;
+	}
+	else if(AIxdist > -60 && AIxdist < 0){
+	    Fighter2.controller1.apress = true;
+	}
+	else{
+	  	Fighter2.controller1.apress = false;
+	  	Fighter2.controller1.apress = false;
+	}
 
-  //attack logic
-  if(AIxdist < 30 && AIxdist > 0 ){
-  	Fighter2.controller1.apress = true;
-  }
-  else if(AIxdist > -30 && AIxdist < 0){
-  	Fighter2.controller1.apress = true;
-  }
-  else{
-  	Fighter2.controller1.apress = false;
-  	Fighter2.controller1.apress = false;
-  }
+	//more attack logic
+	//if(AIxdist < 50 && AIxdist > 0 && Fighter1.health > 30){
+	/*if(AIxdist < 50 && AIxdist > 0 && Fighter1.health > 30){
+	  	Fighter2.controller1.apress = true;
+	  	//console.log("punch!");
+	}
+	else if(AIxdist > -50 && AIxdist < 0 && Fighter1.health > 30){
+	    Fighter2.controller1.apress = true;
+	}
+	else{
+	  	Fighter2.controller1.apress = false;
+	  	Fighter2.controller1.bpress = false;
+	}*/
 
-  //jump logic
-  if(AIydist > 100){
-  	console.log("jump?");
-  	Fighter2.controller1.ypress = true;
-  	//Fighter2.character.body.velocity.y = -100;
-  }
-  else{
-  	Fighter2.controller1.ypress = false;
-  }
+	
+
+	  //jump logic
+	if(AIydist > 100 || Fighter2.character.body.position.y < 40){
+	  	//console.log("jump?");
+	  	Fighter2.controller1.ypress = true;
+	  	//Fighter2.character.body.velocity.y = -100;
+	}
+	else{
+	  	Fighter2.controller1.ypress = false;
+	}
+
+	//console.log(Fighter2.character.body.position.x);
+	//avoid going out of bounds
+	if(Fighter2.character.body.position.x < 200){
+		Fighter2.controller1.rightpress = true;
+		//console.log("Avoid wall");
+	}
+	else if(Fighter2.character.body.position.x > 400){
+		Fighter2.controller1.leftpress = true;
+		//console.log("Avoid right bound");	
+	}
+	else{
+		//temporary fix need to remove later
+  		Fighter2.controller1.leftpress = false;
+  		Fighter2.controller1.rightpress = false;
+    }
+
 
 
 },
