@@ -46,7 +46,7 @@ var loadState={
 				game.load.image('creditsButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/creditsButton.png');
 				game.load.image('menuButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/menuButton.png');
 				this.game.load.audio('creditsMusic', 'https://ufosc.github.io/marston-vs-west/States/Assets/creditsTestMusic.ogg');
-				this.game.load.audio('menuMusic', 'https://ufosc.github.io/marston-vs-west/States/Assets/menuTestMusic.ogg');
+				this.game.load.audio('menuMusic', 'https://ufosc.github.io/marston-vs-west/States/Assets/creditsTestMusic.ogg');
 				this.game.load.audio('allstar', 'https://ufosc.github.io/marston-vs-west/States/Assets/fight.ogg');
 				game.load.image('marstonPic', 'https://ufosc.github.io/marston-vs-west/States/Assets/thegreatestlibrary.jpeg');
 				game.load.image('westPic', 'https://ufosc.github.io/marston-vs-west/States/Assets/theworstlibrary.jpg');
@@ -62,7 +62,8 @@ var loadState={
 				game.load.image('dudeIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/dudeIcon.png');
 				game.load.image('chickIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/chickIcon.png');
 				game.load.spritesheet('crowd', 'https://ufosc.github.io/marston-vs-west/States/Assets/dude.png', 32, 48);
-				//game.load.audio('playMusic', 'assets/playTestMusic.ogg');
+				game.load.image('vsIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/vsIcon.png');
+				game.load.image('computerIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/aiImage.jpg')
 
 		},
 	create: function(){
