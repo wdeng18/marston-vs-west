@@ -51,7 +51,7 @@ var loadState={
 				game.load.image('marstonPic', 'https://ufosc.github.io/marston-vs-west/States/Assets/thegreatestlibrary.jpeg');
 				game.load.image('westPic', 'https://ufosc.github.io/marston-vs-west/States/Assets/theworstlibrary.jpg');
 				game.load.image('fullScreenButton', 'https://ufosc.github.io/marston-vs-west/States/Assets/fullScreenButton.png');
-				game.load.image('displayButton1', 'https://ufosc.github.io/marston-vs-west/States/AssetsdisplayButton1.png');
+				game.load.image('displayButton1', 'https://ufosc.github.io/marston-vs-west/States/Assets/displayButton1.png');
 				game.load.image('displayButton2', 'https://ufosc.github.io/marston-vs-west/States/Assets/displayButton2.png');
 				game.load.image('displayButton3', 'https://ufosc.github.io/marston-vs-west/States/Assets/displayButton3.png');
 				game.load.image('displayButton4', 'https://ufosc.github.io/marston-vs-west/States/Assets/displayButton4.png');
