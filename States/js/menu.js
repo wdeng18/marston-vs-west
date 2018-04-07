@@ -3,17 +3,6 @@ var menuState={
    create: function(){
      //Create the menu triangles
 
-
-     background = game.add.sprite(0, 0);
-     	background.width = 800;
-     	background.height = 600;
-
-     	filter = game.add.filter('Fire', 800, 600);
-     	filter.alpha = 0.0;
-
-     	background.filters = [filter];
-
-
      var bmd = game.add.bitmapData(800, 600);
         bmd.addToWorld();
         var graphics = game.add.graphics(0, 0);
@@ -33,6 +22,14 @@ var menuState={
         //Second triangle not created?
 
     game.stage.backgroundColor = '#00ad14';   //Give us some color pls
+      background = game.add.sprite(0, 0);
+     	background.width = 800;
+     	background.height = 600;
+
+     	filter = game.add.filter('Fire', 800, 600);
+     	filter.alpha = 0.0;
+
+     	background.filters = [filter];
    	var nameLabel=game.add.text(game.world.height - 250,80,'Marston vs. West',{font: '50px Arial',fill: '#ffffff'});
     var subNameLabel=game.add.text(game.world.height - 275,140,'The fate of two libraries: Arcade Edition',{font: '25px Arial',fill: '#ffffff'});
    	var textLabel=game.add.text(50,game.world.height-150,'Press "W" key to start' + '\n' + 'Press "G" key to select characters \n Debug build',{font: '25px Arial',fill:'#ffffff'});
