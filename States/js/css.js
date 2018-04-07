@@ -105,11 +105,14 @@ var cssState={
      //Eventually allow the player to start game;
      gameReadyText.text = `Game ready`;
      /*
-     if(game.device.android || game.device.iOS)
+     //if(game.device.android || game.device.iOS)
      {
        startButton.visible = true; //If on mobile and the characters are selected, make the start button visible
      }
      */
+     
+     startButton.visible = true; //If on mobile and the characters are selected, make the start button visible
+     
     // game.state.start('play');//temporary fix, edit later
    }
    else {
