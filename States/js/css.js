@@ -2,7 +2,13 @@ console.log("winstate reached");
 
 var cssState={
   create: function(){
-    charSelected1, charSelected2 = false;
+    //Reset values to default so if player wants to play again, it does not start off "ready" to play
+    charSelected1 = false;
+    charSelected2 = false;
+    charName1 = "";
+    charName2 = "";
+
+
     key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
     dudeIcon = game.add.sprite(game.world.width * .5 - 200, game.world.height * .25 + 50, 'dudeIcon');
     dudeIcon.anchor.setTo(.5,.5);
@@ -66,6 +72,7 @@ var cssState={
 
   },
   start: function(){
+    gameReadyText.text = `Game Start!`;
     music.stop();
     game.state.start('play');
  },
@@ -87,7 +94,7 @@ var cssState={
    if(charSelected1 && charSelected2 && key1.isDown)
    {
      //Eventually allow the player to start game;
-     gameReadyText.text = `Game ready`;
+     gameReadyText.text = `Game Start!`;
      game.state.start('play');
    }
    else if(charSelected1 && charSelected2)
@@ -249,8 +256,8 @@ var cssState={
 
    if(game.physics.arcade.overlap(player1Icon, dudeIcon))
    {
-     charName2 = "";
-     charSelected2 = false;
+     charName1 = "";
+     charSelected1 = false;
      dudeIcon.tint =  0xffffff;
 
       if(player1BodyIcon.animations)
