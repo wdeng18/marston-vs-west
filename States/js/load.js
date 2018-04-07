@@ -64,7 +64,7 @@ var loadState={
 				game.load.spritesheet('crowd', 'https://ufosc.github.io/marston-vs-west/States/Assets/dude.png', 32, 48);
 				game.load.image('vsIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/vsIcon.png');
 				game.load.image('computerIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/aiImage.jpg')
-
+				game.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser-ce/master/filters/Fire.js');
 		},
 	create: function(){
 		music = game.add.audio('menuMusic');
