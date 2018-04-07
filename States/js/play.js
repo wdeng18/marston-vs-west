@@ -305,16 +305,12 @@ else
 
 
 //control logic for virtual keys
-
-//console.log(Fighter.controlnum);
-
 if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
-//console.log("inside virtual key check");
+
 if (Fighter.controller1.leftpress == true){
       console.log("left??");
 }
 
-     // console.log("inside virtual key check");
   if (Fighter.controller1.xpress && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
   {
       Fighter.character.body.velocity.x = 0;
@@ -422,6 +418,7 @@ if (Fighter.controller1.leftpress == true){
           Fighter.hitVelocity += -125;
         }
       }
+      console.log(Fighter);
       Fighter.character.animations.play('right');
       Fighter.shielding = false;
   }
@@ -905,17 +902,17 @@ else
 
 if(charName2 == 'dude')
 {
-  Player2 =  new dj(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, 2);
+  Player2 =  new dj(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, controlOptionAI);
   console.log("Player 2 is dj");
 }
 else if(charName2 == 'chick')
 {
-  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, 2);
+  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, controlOptionAI);
   console.log("Player 2 is lab");
 }
 else
 {
-  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, 2);
+  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, controlOptionAI);
   console.log("Player 2 is lab");
 }
 
@@ -981,7 +978,7 @@ if(Player1.controlnum == -1){
   Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
   Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
   Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
-  
+
   //end of event listeners
 
 
@@ -1091,7 +1088,7 @@ if(controlOptionAI == -2)
 {
 
   this.AIplay(Player1, Player2);
-      
+
 }
 
       //console.log("echo");
