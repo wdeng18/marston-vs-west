@@ -2,6 +2,7 @@ console.log("winstate reached");
 
 var cssState={
   create: function(){
+    charSelected1, charSelected2 = false;
     key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
     dudeIcon = game.add.sprite(game.world.width * .5 - 200, game.world.height * .25 + 50, 'dudeIcon');
     dudeIcon.anchor.setTo(.5,.5);
@@ -24,8 +25,6 @@ var cssState={
 
     player1Icon = game.add.sprite(game.world.width * .5 -50, game.world.height * .5, 'player1cssIcon');
     player2Icon = game.add.sprite(game.world.width * .5 +50, game.world.height * .5, 'player2cssIcon');
-    player1Icon.scale.setTo(1.5,1.5);
-    player2Icon.scale.setTo(1.5,1.5);
 
     player1Icon.inputEnabled = true;
     player2Icon.inputEnabled = true;
@@ -54,21 +53,12 @@ var cssState={
     //wkey.onDown.addOnce(this.start,this);
     player1Text = game.add.text(80,game.world.height-60,'Character 1 selected: ',{font: '25px Arial',fill:'#ffffff'});
     player2Text = game.add.text(80,game.world.height-80,'Character 2 selected: ',{font: '25px Arial',fill:'#ffffff'});
-    gameReadyText = game.add.text(80,game.world.height-100,'',{font: '25px Arial',fill:'#ffffff'});
+    gameReadyText = game.add.text(game.world.width * .5,game.world.height-300,'',{font: '50px Arial',fill:'#ffffff'});
+    gameReadyText.anchor.setTo(.5,.5);
+     //disable input until we pick characters
     player1BodyIcon = game.add.sprite(game.world.width * .25, game.world.height * .75, '');
     player2BodyIcon = game.add.sprite(game.world.width * .75, game.world.height * .75, '');
 
-
-
-
-/*
-    if(this.device.android || this.device.iOS) //If on Mobile, make an invisible button that will be visible only when the characters are selected
-    {
-      startButton = game.add.button(game.world.width *.25,game.world.height * - 100, 'startButton');
-      startButton.visible = false;
-      startButton.onInputUp.add(this.start,this);
-    }
-    */
 
 //TODO:Incorperate dragUpdate function event system into current system. I think it's needed to fix bugs/add dynamic features like spawning the character when hovering over while still dragging.
 //TODO:
@@ -99,29 +89,25 @@ var cssState={
    {
      //Eventually allow the player to start game;
      gameReadyText.text = `Game ready`;
+     gameReadyText.inputEnabled = true;
      game.state.start('play');
    }
    else if(charSelected1 && charSelected2)
    {
      //Eventually allow the player to start game;
-     gameReadyText.text = `Game ready`;
-     
-     /*
-     if(this.device.android || this.device.iOS)
-     {
-       startButton.visible = true; //If on mobile and the characters are selected, make the start button visible
-     }
-    
-     
-     startButton.visible = true; //If on mobile and the characters are selected, make the start button visible
-      */
-    // game.state.start('play');//temporary fix, edit later
+     gameReadyText.text = `Game ready:\nClick to start!`;
+     gameReadyText.inputEnabled = true;
+     gameReadyText.events.onInputUp.addOnce(function() {
+       music.stop();
+      game.state.start('play');
+     });
    }
    else {
-     
+     {
        gameReadyText.text = ``;
-      //startButton.visible = false; //Hide the start button and text that says game is ready when both players have not selected a character
-     
+       gameReadyText.inputEnabled = false;
+
+     }
 
    }
  },
@@ -229,7 +215,7 @@ var cssState={
    if(game.physics.arcade.overlap(player2Icon,computerIcon))
    {
      buttonSound.play();
-     charName2 = "chick";
+     charName2 = "robo";
      charSelected2 = true;
      computerIcon.tint =  0xffff00;
      player2BodyIcon.kill();
