@@ -24,6 +24,8 @@ var cssState={
 
     player1Icon = game.add.sprite(game.world.width * .5 -50, game.world.height * .5, 'player1cssIcon');
     player2Icon = game.add.sprite(game.world.width * .5 +50, game.world.height * .5, 'player2cssIcon');
+    player1Icon.scale.setTo(1.5,1.5);
+    player2Icon.scale.setTo(1.5,1.5);
 
     player1Icon.inputEnabled = true;
     player2Icon.inputEnabled = true;
@@ -63,7 +65,7 @@ var cssState={
     //if(game.device.android || game.device.iOS) //If on Mobile, make an invisible button that will be visible only when the characters are selected
     //{
       startButton = game.add.button(game.world.width *.25,game.world.height * - 100, 'startButton');
-      startButton.visible = false;
+      //startButton.visible = false;
       startButton.onInputUp.add(this.start,this);
     //}
 
@@ -102,16 +104,18 @@ var cssState={
    {
      //Eventually allow the player to start game;
      gameReadyText.text = `Game ready`;
+     /*
      if(game.device.android || game.device.iOS)
      {
        startButton.visible = true; //If on mobile and the characters are selected, make the start button visible
      }
+     */
     // game.state.start('play');//temporary fix, edit later
    }
    else {
      {
        gameReadyText.text = ``;
-       startButton.visible = false; //Hide the start button and text that says game is ready when both players have not selected a character
+      // startButton.visible = false; //Hide the start button and text that says game is ready when both players have not selected a character
      }
 
    }
