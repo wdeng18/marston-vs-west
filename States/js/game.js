@@ -20,6 +20,9 @@ if(game.device.android || game.device.iOS)
 }
 var controlOptionVpad = 1;
 var controlOptionAI = 2;
+
+var background;
+var filter;
 var key1;
 var playSound;
 var playMusic;
@@ -121,8 +124,8 @@ var prevkey; //currently unused
 var Player1;
 var Player2;
 
-//var controller1;
-//var controller2;
+var controller1;
+var controller2;
 
 //cooldown vars
 var cooldown1;

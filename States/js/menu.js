@@ -2,6 +2,18 @@ var menuState={
 
    create: function(){
      //Create the menu triangles
+
+
+     background = game.add.sprite(0, 0);
+     	background.width = 800;
+     	background.height = 600;
+
+     	filter = game.add.filter('Fire', 800, 600);
+     	filter.alpha = 0.0;
+
+     	background.filters = [filter];
+
+
      var bmd = game.add.bitmapData(800, 600);
         bmd.addToWorld();
         var graphics = game.add.graphics(0, 0);
@@ -86,5 +98,8 @@ var menuState={
     buttonSound.play();
     music.stop();
     game.state.start('credits');
+  },
+  update: function() {
+    filter.update();
   }
 };
