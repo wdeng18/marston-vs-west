@@ -121,8 +121,8 @@ var prevkey; //currently unused
 var Player1;
 var Player2;
 
-var controller1;
-var controller2;
+//var controller1;
+//var controller2;
 
 //cooldown vars
 var cooldown1;

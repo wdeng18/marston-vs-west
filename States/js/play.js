@@ -116,13 +116,13 @@ class Fighter {
 
     if(controlnum == 1)
      {
-      this.controller1 = new Object;
-      controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.E, 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R, 'shield': Phaser.KeyCode.Y, 'special': Phaser.KeyCode.F});
+      //controller1 = new Object;
+      this.controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.E, 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R, 'shield': Phaser.KeyCode.Y, 'special': Phaser.KeyCode.F});
      }
     else if(controlnum == 2)
      {
-     this.controller1 = new Object;
-     controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.I, 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'punch': Phaser.KeyCode.P, 'kick': Phaser.KeyCode.O, 'shield': Phaser.KeyCode.OPEN_BRACKET, 'special': Phaser.KeyCode.J});
+     //controller1 = new Object;
+     this.controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.I, 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'punch': Phaser.KeyCode.P, 'kick': Phaser.KeyCode.O, 'shield': Phaser.KeyCode.OPEN_BRACKET, 'special': Phaser.KeyCode.J});
      }
      else if(controlnum == -1)
      {
@@ -172,8 +172,8 @@ class Fighter {
 
          }
        }
-
-       return this;
+       console.log("fighter made");
+       //return this;
      }
   }
 
@@ -303,13 +303,18 @@ else
   Fighter.hitVelocity = 0;
 }
 
+
 //control logic for virtual keys
+
+//console.log(Fighter.controlnum);
+
 if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
-
+//console.log("inside virtual key check");
 if (Fighter.controller1.leftpress == true){
-
+      console.log("left??");
 }
 
+     // console.log("inside virtual key check");
   if (Fighter.controller1.xpress && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
   {
       Fighter.character.body.velocity.x = 0;
@@ -497,6 +502,7 @@ if (Fighter.controller1.leftpress == true){
 
 //control logic for real keyboard
 else if(Fighter.controlnum > 0){
+//console.log("inside real key check");
 
   if (Fighter.controller1.shield.isDown && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
   {
@@ -505,7 +511,7 @@ else if(Fighter.controlnum > 0){
       Fighter.shielding = true;
 
   }
-  else if (Fighter.controller1.punch.isDown && controller.punch.downDuration(80 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
+  else if (Fighter.controller1.punch.isDown && Fighter.controller1.punch.downDuration(80 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
   {
       //logic to change direction facing
       if (Fighter.character.scale.x < 0 ){
@@ -682,7 +688,7 @@ else if(Fighter.controlnum > 0){
   }
 
 }
-
+//console.log("end of key check");
 //end of update input function
 },
 
@@ -899,22 +905,27 @@ else
 
 if(charName2 == 'dude')
 {
-  Player2 =  new dj(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5,-2);
+  Player2 =  new dj(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, 2);
   console.log("Player 2 is dj");
 }
 else if(charName2 == 'chick')
 {
-  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5,-2);
+  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, 2);
   console.log("Player 2 is lab");
 }
 else
 {
-  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5,-2);
+  Player2 =  new lab(charName2,  0, 3, game.world.width*0.75,game.world.height*0.5, 2);
   console.log("Player 2 is lab");
 }
 
 //event listener for player1 touch controls
+//console.log("test print");
+
+//console.log(Player1.controlnum);
+
 if(Player1.controlnum == -1){
+  //console.log("virtual buttons are made buttons");
   Player1.controller1.buttonleft = game.add.button(5, 472, 'leftButton', null, this, 0, 1, 0, 1);
   Player1.controller1.buttonleft.events.onInputOver.add(function(){Player1.controller1.leftpress = true;});
   Player1.controller1.buttonleft.events.onInputOut.add(function(){Player1.controller1.leftpress = false;});
@@ -970,11 +981,14 @@ if(Player1.controlnum == -1){
   Player1.controller1.buttony.events.onInputOut.add(function(){Player1.controller1.ypress = false;});
   Player1.controller1.buttony.events.onInputDown.add(function(){Player1.controller1.ypress = true;});
   Player1.controller1.buttony.events.onInputUp.add(function(){Player1.controller1.ypress = false;});
-
+  
   //end of event listeners
-}
 
-      mob = new crowd(0,0);
+
+  }
+
+
+      //mob = new crowd(0,0);
 
       healthtext1 = game.add.text(0,0, `DMG ${Player1.health}`,style);
 
@@ -1035,6 +1049,7 @@ if(Player1.controlnum == -1){
         }
       };
 
+
 timerText = game.add.text(game.world.width * .5, 40,`Time: ${timer.duration}`,{font: '40px Arial',fill: '#000000'});
 timerText.anchor.setTo(.5,.5);
 
@@ -1070,15 +1085,20 @@ timerText.anchor.setTo(.5,.5);
     game.physics.arcade.overlap(Player1.weapon1.bullets, Player2.character, this.hitPlayer2);
 	game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1);
 
+
+
 if(controlOptionAI == -2)
 {
+
   this.AIplay(Player1, Player2);
+      
 }
 
+      //console.log("echo");
     this.updateInput(Player1,cooldown1);
-
     this.updateInput(Player2,cooldown2);
 
+      //console.log("echo");
     healthtext1.text = `DMG ${Math.ceil(Player1.health)} %`;
     healthtext2.text = `DMG ${Math.ceil(Player2.health)} %`;
 
