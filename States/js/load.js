@@ -65,7 +65,12 @@ var loadState={
 				game.load.image('vsIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/vsIcon.png');
 				game.load.image('computerIcon', 'https://ufosc.github.io/marston-vs-west/States/Assets/aiImage.jpg')
 				game.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser-ce/master/filters/Fire.js');
-		},
+				game.load.audio('hitSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/hitSound.wav');
+				game.load.audio('jumpSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/jumpSound.wav');
+				game.load.audio('buttonSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/buttonSound.wav');
+				game.load.audio('deathSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/deathSound.wav');
+				game.load.audio('respawnSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/respawnSound.wav');
+	},
 	create: function(){
 		music = game.add.audio('menuMusic');
 		music.loopFull();
