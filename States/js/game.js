@@ -20,7 +20,7 @@ if(game.device.android || game.device.iOS)
 }
 var controlOptionVpad = 1;
 var controlOptionAI = 2;
-
+var feedbackLabel;
 var background;
 var filter;
 var key1;

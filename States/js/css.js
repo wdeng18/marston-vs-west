@@ -49,16 +49,16 @@ var cssState={
     buttonSound = game.add.audio('buttonSound');
 
     var startLabel=game.add.text(80,game.world.height-40,'Press "1" key to play game after selecting characters!',{font: '25px Arial',fill:'#ffffff'});
-    //var wkey= game.input.keyboard.addKey(Phaser.Keyboard.W);
-    //wkey.onDown.addOnce(this.start,this);
-    player1Text = game.add.text(80,game.world.height-60,'Character 1 selected: ',{font: '25px Arial',fill:'#ffffff'});
-    player2Text = game.add.text(80,game.world.height-80,'Character 2 selected: ',{font: '25px Arial',fill:'#ffffff'});
     gameReadyText = game.add.text(game.world.width * .5,game.world.height-300,'',{font: '50px Arial',fill:'#ffffff'});
     gameReadyText.anchor.setTo(.5,.5);
-     //disable input until we pick characters
+
+    player1Text = game.add.text(80,game.world.height-60,'Character 1 selected: ',{font: '25px Arial',fill:'#ffffff'});
+    player2Text = game.add.text(80,game.world.height-80,'Character 2 selected: ',{font: '25px Arial',fill:'#ffffff'});
+
     player1BodyIcon = game.add.sprite(game.world.width * .25, game.world.height * .75, '');
     player2BodyIcon = game.add.sprite(game.world.width * .75, game.world.height * .75, '');
-
+    player1BodyIcon.scale.setTo(1.5,1.5);
+    player2BodyIcon.scale.setTo(1.5,1.5);
 
 //TODO:Incorperate dragUpdate function event system into current system. I think it's needed to fix bugs/add dynamic features like spawning the character when hovering over while still dragging.
 //TODO:
@@ -67,8 +67,7 @@ var cssState={
   },
   start: function(){
     music.stop();
-
-   game.state.start('play');
+    game.state.start('play');
  },
  update: function() {
    player1Text.text = `Character selected 1: ${charName1}`;
@@ -89,24 +88,22 @@ var cssState={
    {
      //Eventually allow the player to start game;
      gameReadyText.text = `Game ready`;
-     gameReadyText.inputEnabled = true;
      game.state.start('play');
    }
    else if(charSelected1 && charSelected2)
-   {
-     //Eventually allow the player to start game;
+   { //Allow the player to tap game ready to start game
      gameReadyText.text = `Game ready:\nClick to start!`;
      gameReadyText.inputEnabled = true;
      gameReadyText.events.onInputUp.addOnce(function() {
        music.stop();
       game.state.start('play');
      });
+
    }
    else {
      {
        gameReadyText.text = ``;
-       gameReadyText.inputEnabled = false;
-
+        gameReadyText.inputEnabled = false;
      }
 
    }
@@ -215,7 +212,7 @@ var cssState={
    if(game.physics.arcade.overlap(player2Icon,computerIcon))
    {
      buttonSound.play();
-     charName2 = "robo";
+     charName2 = "chick";
      charSelected2 = true;
      computerIcon.tint =  0xffff00;
      player2BodyIcon.kill();
