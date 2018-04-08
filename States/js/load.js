@@ -70,6 +70,7 @@ var loadState={
 				game.load.audio('buttonSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/buttonSound.wav');
 				game.load.audio('deathSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/deathSound.wav');
 				game.load.audio('respawnSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/respawnSound.wav');
+				game.load.audio('itemSound', 'https://ufosc.github.io/marston-vs-west/States/Assets/itemSound.wav');
 	},
 	create: function(){
 		music = game.add.audio('menuMusic');
