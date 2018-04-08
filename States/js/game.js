@@ -13,11 +13,20 @@ var config =
 
 var game = new Phaser.Game(config);
 //Change the screen dimensions to accomidate mobile users (eventually will change other things about mobile experience but not here)
+//Start mobile users in exact_fit with full screen default
 if(game.device.android || game.device.iOS)
 {
-  game.scale.fullScreenScaleMode = stretchFullScreen;
-  console.log("If this log's something is wrong, this only logs for mobile, and will NEVER log for desktop")
+  game.scale.fullScreenScaleMode = EXACT_FIT;
+  game.scale.scaleMode = Phaser.ScaleManager.forceOrientation(forceLandscape);
+  game.scale.setMaximum();
+  game.scale.setScreenSize(true);
+  game.scale.refresh();
+  game.scale.startFullScreen();
+  console.log("This only logs for mobile, and will NEVER log for desktop")
 }
+var nameText1;
+var nameText2;
+var item1;
 var controlOptionVpad = 1;
 var controlOptionAI = 2;
 var feedbackLabel;
