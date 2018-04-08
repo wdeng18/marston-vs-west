@@ -13,6 +13,74 @@ class crowd{
   }
 }
 
+class Item
+{
+  constructor(type, startx, starty)
+    {
+    this.type = game.add.sprite(startx, starty, type);
+    game.physics.arcade.enable(this.type);
+    this.type.body.bounce.y = 0;//0.2;
+    this.type.body.gravity.y = 400;
+    this.type.body.collideWorldBounds = false;
+    this.pickedUp = false;
+    this.user = null; //Will be a sprite
+    }
+    useItem (target) { //Only call if item has a user and is pickedUp
+      //When you use the item, first check the type of item used, then do the approipiate action
+      if(this.pickedUp && this.user != null)
+      {
+        console.log("Used item!")
+        console.log(this);
+        if(this.type.key == 'bottle') //heal the player and destroy bottle
+        {
+          itemSound.play();
+          this.type.destroy();
+          this.type = null;
+          target.health += 10;
+          game.time.events.add(Phaser.Timer.SECOND * 2, this.spawnItem, this);
+        }
+      }
+    }
+    spawnItem() {
+      //Called after a timer goes off to reassign type and change position of item (allows for a reusable item)
+      //For now, respawn it default as a bottle
+        this.type = game.add.sprite(game.world.width * .5, game.world.height*.5, 'bottle');
+        game.physics.arcade.enable(this.type);
+        this.type.body.bounce.y = 0;//0.2;
+        this.type.body.gravity.y = 400;
+        this.type.body.collideWorldBounds = false;
+    }
+    xDistCheck(target) { //Get the distance between the item and the target(probably the player in most cases)
+      if(this.type != null)
+      {
+        return Math.abs(this.type.body.position.x - target.body.position.x);
+      }
+
+    }
+    yDistCheck(target) { //Get the distance between the item and the target(probably the player in most cases)
+      if(this.type != null)
+      {
+        return Math.abs(this.type.body.position.y - target.body.position.y);
+      }
+
+    }
+    alignToTarget() //Should always have a type when called due to update function
+    {
+      if(this.user == null)
+      {
+        //Can't follow anything, no user
+      }
+      else
+      {
+
+          this.type.body.position.x = this.user.body.position.x;
+          this.type.body.position.y = this.user.body.position.y;
+
+      }
+    }
+}
+
+
 //Virtual pad
 class vpad{
   constructor(controlnum)
@@ -51,6 +119,8 @@ class Fighter {
 
        this.startx = startx;
        this.starty = starty;
+
+       this.character.hasItem = false;
 
       //Cooldown for attacks
       this.hitCD = 0;
@@ -141,34 +211,65 @@ class Fighter {
        this.weapon1.trackSprite(this.character, 28, 40, true);
 
        this.stocks = game.add.group();
-
+//Stocks will now match up to character selected
        for (var g = 3; g > 0; g--)
        {
 
          if(controlnum == -1) //For the vpad
          {
-           var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
-           stock.anchor.setTo(.5,.5);
-
+           if(charName1 == 'dude')
+           {
+             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player2cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
+           else if(charName1 == 'chick')
+           {
+             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
          }
          else if(controlnum == 1)
          {
-           var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
-           stock.anchor.setTo(.5,.5);
+           if(charName1 == 'dude')
+           {
+             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player2cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
+           else(charName1 == 'chick')
+           {
+             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
          }
       }
       for(var h = 0; h < 3; h++)
       {
          if(controlnum == 2)
          {
-           var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
-           stock.anchor.setTo(.5,.5);
+           if(charName2 == 'dude') //dude is blue, chick is orange
+           {
+             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
+           else if(charName2 == 'chick')
+           {
+             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player1cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
 
          }
          else if(controlnum == -2) //For the bot
          {
-           var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
-           stock.anchor.setTo(.5,.5);
+           if(charName2 == 'dude')
+           {
+             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
+           else if(charName2 == 'chick')
+           {
+             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player1cssIcon');
+             stock.anchor.setTo(.5,.5);
+           }
 
          }
        }
@@ -520,6 +621,29 @@ else if(Fighter.controlnum > 0){
       }
       Fighter.character.animations.play('punch');
       Fighter.weapon1.fire();
+
+      //If really freaking close to item, and if he isnt holding something, use it!
+      if((item1.xDistCheck(Fighter.character) < 150) && (item1.yDistCheck(Fighter.character) < 150) && !(Fighter.character.hasItem) && (item1.user == null))
+      {
+        item1.user = Fighter.character;
+        item1.pickedUp = true;
+        Fighter.character.hasItem = true;
+        console.log("close to item");
+
+
+      }
+
+      if(Fighter.character.hasItem) //If he has an item, USE IT!
+      {
+
+        item1.useItem(Fighter);
+
+        item1.user = null;
+        item1.pickedUp = false;
+        Fighter.character.hasItem = false;
+
+      }
+
       //Fighter.hitCD = 30;
       Fighter.shielding = false;
       Fighter.hitSwitchPunch = true;
@@ -690,16 +814,7 @@ else if(Fighter.controlnum > 0){
 },
 
 
-  item: function(type, startx, starty){
-    this.type = game.add.sprite(startx, starty, type);
 
-    game.physics.arcade.enable(this.type);
-
-    this.type.body.bounce.y = 0;//0.2;
-      this.type.body.gravity.y = 400;
-      this.type.body.collideWorldBounds = false;
-      return this;
-  },
 
   respawn: function(Fighter){
       console.log("Beginning of respawn");
@@ -871,6 +986,8 @@ hitSound = game.add.audio('hitSound');
 respawnSound = game.add.audio('respawnSound');
 deathSound = game.add.audio('deathSound');
 jumpSound = game.add.audio('jumpSound');
+itemSound = game.add.audio('itemSound');
+buttonSound = game.add.audio('buttonSound');
 
 if(game.device.android || game.device.iOS)
 {
@@ -881,6 +998,7 @@ else {
   //If on desktop, do not use virtual inputs for player 1.
   controlOptionVpad = 1;
 }
+
 
 
 if(charName1 == 'dude')
@@ -920,6 +1038,10 @@ else
 //console.log("test print");
 
 //console.log(Player1.controlnum);
+
+//Create an item
+item1 = new Item('bottle', game.world.width * .5, game.world.height * .5);
+
 
 if(Player1.controlnum == -1){
   //console.log("virtual buttons are made buttons");
@@ -995,6 +1117,10 @@ if(Player1.controlnum == -1){
 
       livetext2 = game.add.text(650,30, `Lives ${Player2.lives}`,style);
 
+      nameText1 = game.add.text(0, 0, "P1", style);
+      nameText2 = game.add.text(0, 0, "P2", style);
+
+
       //Pause
       pauseLabel = game.add.text(game.world.width * .5, game.world.height * .15, 'Pause', {font: '50px Arial',fill: '#ffffff'});
       pauseLabel.anchor.setTo(.5,.5);
@@ -1002,10 +1128,10 @@ if(Player1.controlnum == -1){
       pauseLabel.events.onInputUp.add(function() {
         game.paused = true;
         //Pause menu
-        pauseMenu = game.add.sprite(w/2, h-250, 'menuButton');
+        pauseMenu = game.add.sprite(game.world.width * .5, game.world.height *.5, 'menuButton');
         pauseMenu.anchor.setTo(.5,.5);
 
-        choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue', { font: '30px Arial', fill: '#fff' });
+        choiseLabel = game.add.text(w/2, h-150, 'Click outside menu to continue, click center to quit', { font: '30px Arial', fill: '#fff' });
         choiseLabel.anchor.setTo(0.5, 0.5);
       });
       game.input.onDown.add(unpause, self);
@@ -1014,26 +1140,24 @@ if(Player1.controlnum == -1){
         //only act if isPaused
         if(game.paused)
         {
-          //Calculate corners of menu
-          var x1 = w/2 - 270/2;
-          var x2 = w/2 + 270/2;
-          var y1 = h/2 - 180/2;
-          var y2 = h/2 + 180/2;
+          //Calculate corners of menu button
+          var x1 = game.world.width * .5 - 50;
+          var x2 = game.world.width * .5 + 50;
+          var y1 = game.world.height * .5 - 30;
+          var y2 = game.world.height * .5 + 30;
 
             // Check if the click was inside the menu
             if(event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2 )
             {
-            	// The choicemap is an array that will help us see which item was clicked
-                var choisemap = ['one', 'two', 'three', 'four', 'five', 'six'];
+                music.stop();
+                buttonSound.play();
+                game.state.start('menu');
+                pauseMenu.destroy();
+                choiseLabel.destroy();
 
-                // Get menu local coordinates for the click
-                var x = event.x - x1,
-                    y = event.y - y1;
-
-                // Calculate the choice
-                var choise = Math.floor(x / 90) + 3*Math.floor(y / 90); //So it finds where in the "array" the click was using this algorithm
-                // Display the choice
-                choiseLabel.text = 'You chose menu item: ' + choisemap[choise] + '\n' + 'Click near the edge of the screen to unpause';
+                // Unpause the game, required to actually jump to the menu
+                game.paused = false;
+                console.log('inside menu');
             }
             else {
               	// Remove the menu and the label
@@ -1044,6 +1168,7 @@ if(Player1.controlnum == -1){
                 game.paused = false;
             }
         }
+
       };
 
 
@@ -1078,18 +1203,32 @@ timerText.anchor.setTo(.5,.5);
     game.physics.arcade.collide(Player1.character, platforms );
     game.physics.arcade.collide(Player2.character, platforms );
     game.physics.arcade.collide(Player1.character,Player2.character);
+    //add physics for item (eventually just add items to a group and use collision detection for the group)
+    game.physics.arcade.collide(item1.type, platforms );
+
+
 
     game.physics.arcade.overlap(Player1.weapon1.bullets, Player2.character, this.hitPlayer2);
-	game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1);
+	   game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1);
+
+    nameText1.alignTo(Player1.character, Phaser.TOP, 16);
+    nameText2.alignTo(Player2.character,Phaser.TOP, 16);
+    if(item1.type != null)
+    {
+      item1.alignToTarget();
+    }
 
 
 
-if(controlOptionAI == -2)
-{
 
-  this.AIplay(Player1, Player2);
 
-}
+
+    if(controlOptionAI == -2)
+    {
+
+      this.AIplay(Player1, Player2);
+
+    }
 
       //console.log("echo");
     this.updateInput(Player1,cooldown1);
