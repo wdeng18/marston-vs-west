@@ -12,9 +12,26 @@ var config =
 }
 
 var game = new Phaser.Game(config);
+//Change the screen dimensions to accomidate mobile users (eventually will change other things about mobile experience but not here)
+//Start mobile users in exact_fit with full screen default
+
+var nameText1;
+var nameText2;
+var item1;
+var controlOptionVpad = 1;
+var controlOptionAI = 2;
+var feedbackLabel;
+var background;
+var filter;
 var key1;
 var playSound;
 var playMusic;
+var hitSound;
+var respawnSound;
+var deathSound;
+var buttonSound;
+var jumpSound;
+var isHitting = false;
 var timer;
 var timerText;
 var player1Icon;
@@ -23,6 +40,9 @@ var marstonPicture;
 var westPicture;
 var mob;
 var people;
+
+var lives;
+
 //Display options variables
 var stretchFullScreen;
 var resizeFullScreen;
@@ -133,8 +153,12 @@ var gameSecDecButton;
 
 var music;
 
-var gameMinutes = 0;
-var gameSeconds = 30;
+var gameMinutes = 1;
+var gameSeconds = 0;
+
+var stage1;
+var stage2;
+var chosenStageName;
 
 game.state.add('boot',bootState);
 game.state.add('options',optionsState);
@@ -144,5 +168,6 @@ game.state.add('menu',menuState);
 game.state.add('play',playState);
 game.state.add('win',winState);
 game.state.add('css', cssState);
+game.state.add('sss', sssState);
 
 game.state.start('boot');
