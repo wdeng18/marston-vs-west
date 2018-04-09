@@ -129,7 +129,7 @@ onFullScreenChange: function (scale)
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   }
   else {
-    game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
   }
 }
 
