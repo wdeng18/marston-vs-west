@@ -64,7 +64,8 @@ var menuState={
     fullScreenButton.anchor.setTo(.5,.5);
     fullScreenButton.visible = false;
 
-    game.scale.onFullScreenChange.add(this.onFullScreenChange, this); //Add the event for changing fullscreen
+    //game.scale.onFullScreenChange.add(this.onFullScreenChange, this); //Add the event for changing fullscreen
+
 
     buttonSound = game.add.audio('buttonSound');
 
@@ -117,20 +118,22 @@ fullScreenConfig: function()
   console.log("Calling fullscreen function");
   if(!game.scale.isFullScreen)
   {
-
+    game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
     game.scale.startFullScreen();
 
   }
-},
+}
+/*
 onFullScreenChange: function (scale)
 {
   if(game.scale.isFullScreen)
   {
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
   }
   else {
-    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
   }
 }
+*/
 
 };
