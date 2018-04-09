@@ -59,6 +59,13 @@ var menuState={
     quitButton = game.add.button(game.world.width *.75 +50 ,game.world.height *.5 -20, 'quitButton');
     quitButton.onInputUp.add(this.quit,this);
 
+    fullScreenButton = game.add.button(game.world.width *.5,game.world.height *.5 + 100, 'fullScreenButton');
+    fullScreenButton.onInputUp.add(this.fullScreenConfig, this);
+    fullScreenButton.anchor.setTo(.5,.5);
+    fullScreenButton.visible = false;
+
+    game.scale.onFullScreenChange.add(this.onFullScreenChange, this); //Add the event for changing fullscreen
+
     buttonSound = game.add.audio('buttonSound');
 
     if(music.name != 'menuMusic')
@@ -98,5 +105,36 @@ var menuState={
   },
   update: function() {
     filter.update();
+    if(game.device.android || game.device.iOS)
+    {
+      fullScreenButton.visible = true;
+    }
+  },
+
+
+fullScreenConfig: function()
+{
+  console.log("Calling fullscreen function");
+  if(!game.scale.isFullScreen)
+  {
+    
+    game.scale.startFullScreen();
+
   }
+},
+onFullScreenChange: function (scale)
+{
+  if(game.scale.isFullScreen)
+  {
+    game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    game.scale.setMaximum();
+    game.scale.refresh();
+  }
+  else {
+    game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+    game.scale.setMaximum();
+    game.scale.refresh();
+  }
+}
+
 };
