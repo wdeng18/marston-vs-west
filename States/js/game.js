@@ -156,6 +156,11 @@ var music;
 var gameMinutes = 1;
 var gameSeconds = 0;
 
+var stage1;
+var stage2;
+var chosenStageName;
+var chosenMap;
+
 game.state.add('boot',bootState);
 game.state.add('options',optionsState);
 game.state.add('credits',creditsState);
@@ -164,5 +169,6 @@ game.state.add('menu',menuState);
 game.state.add('play',playState);
 game.state.add('win',winState);
 game.state.add('css', cssState);
+game.state.add('sss', sssState);
 
 game.state.start('boot');
