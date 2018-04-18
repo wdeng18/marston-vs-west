@@ -159,6 +159,7 @@ var gameSeconds = 0;
 var stage1;
 var stage2;
 var chosenStageName;
+var chosenMap;
 
 game.state.add('boot',bootState);
 game.state.add('options',optionsState);

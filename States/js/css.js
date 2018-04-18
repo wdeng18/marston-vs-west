@@ -51,6 +51,7 @@ var cssState={
     chickIcon.enableBody = true;
 
     buttonSound = game.add.audio('buttonSound');
+    buttonSound.volume -= .5;
 
     var startLabel=game.add.text(80,game.world.height-40,'Press "1" key to play game after selecting characters!',{font: '25px Arial',fill:'#ffffff'});
     gameReadyText = game.add.text(game.world.width * .5,game.world.height-300,'',{font: '50px Arial',fill:'#ffffff'});
@@ -63,6 +64,53 @@ var cssState={
     player2BodyIcon = game.add.sprite(game.world.width * .75, game.world.height * .75, '');
     player1BodyIcon.scale.setTo(1.5,1.5);
     player2BodyIcon.scale.setTo(1.5,1.5);
+
+//Chose your library: Click on label to set variable to a library, then send info later
+    var player1Label=game.add.text(game.world.width * .5 - 150 ,game.world.height-180,'Choose your Library!',{font: '25px Arial',fill:'#ffffff'});
+    player1Label.inputEnabled = true;
+    player1Label.selected = 0;
+    player1Label.librarySelected = '';
+    player1Label.events.onInputUp.add(function() {
+      switch(player1Label.selected)
+      {
+
+        case 0:
+          player1Label.librarySelected = 'Marston'
+          player1Label.text = `${player1Label.librarySelected}`;
+          player1Label.selected++;
+          break;
+        case 1:
+          player1Label.librarySelected = 'West'
+          player1Label.text = `${player1Label.librarySelected}`;
+          player1Label.selected--;
+          break;
+      }
+    });
+
+
+    var player2Label=game.add.text(game.world.width * .5 + 150 ,game.world.height-180,'Choose your Library!',{font: '25px Arial',fill:'#ffffff'});
+    player2Label.inputEnabled = true;
+    player2Label.selected = 0;
+    player2Label.librarySelected = '';
+    player2Label.events.onInputUp.add(function() {
+      switch(player2Label.selected)
+      {
+
+        case 0:
+          player2Label.librarySelected = 'Marston'
+          player2Label.text = `${player2Label.librarySelected}`;
+          player2Label.selected++;
+          break;
+        case 1:
+          player2Label.librarySelected = 'West'
+          player2Label.text = `${player2Label.librarySelected}`;
+          player2Label.selected--;
+          break;
+      }
+    });
+
+
+
 
 //TODO:Incorperate dragUpdate function event system into current system. I think it's needed to fix bugs/add dynamic features like spawning the character when hovering over while still dragging.
 //TODO:

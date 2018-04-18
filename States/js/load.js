@@ -78,7 +78,8 @@ var loadState={
 				game.load.script('filter', 'https://cdn.rawgit.com/photonstorm/phaser-ce/master/filters/Fire.js');
 				game.load.audio('itemSound', 'assets/itemSound.wav');
 				//game.load.audio('playMusic', 'assets/playTestMusic.ogg');
-
+				game.load.tilemap('tilemap1', 'assets/Floor.json', null, Phaser.Tilemap.TILED_JSON);
+				game.load.spritesheet('gator', 'assets/gatorBat.png', 32, 32);
 		},
 	create: function(){
 		music = game.add.audio('menuMusic');

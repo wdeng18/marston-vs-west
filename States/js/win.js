@@ -78,12 +78,22 @@ var winState={
     }
     var statsLabel1 = game.add.text(80, 160, `Player 1 stats:` + '\n' + `Lives: ${Player1.lives}`); //Eventually integrate stats into player class, loop through and print out statistics for both players
     var statsLabel2 = game.add.text(game.world.width -240, 160, `Player 2 stats:` + '\n' + `Lives: ${Player2.lives}`);
-    var startLabel=game.add.text(80,game.world.height-80,'Press "W" key or tap this label to restart',{font: '25px Arial',fill:'#ffffff'});
+    var startLabel=game.add.text(80,game.world.height-80,'Press "W" key or tap this label to go to menu',{font: '25px Arial',fill:'#ffffff'});
     startLabel.inputEnabled = true;
     startLabel.events.onInputUp.add(function() {
       music.stop();
      game.state.start('menu');
     });
+
+    var restartLabel=game.add.text(80,game.world.height- 180,'Press this label to restart',{font: '25px Arial',fill:'#ffffff'});
+    restartLabel.inputEnabled = true;
+    restartLabel.events.onInputUp.add(function() {
+      music.stop();
+     game.state.start('play');
+    });
+
+
+
     if(game.device.android || game.device.iOS)
     {
       //If on mobile, open a new tab with the survey form
@@ -92,7 +102,8 @@ var winState={
     }
     else {
       //If on desktop, open up embedded form.
-      feedbackLabel = new form(this.game, 80,game.world.height-240, "Click here to send feedback! Thanks for playing on Desktop!", "https://goo.gl/forms/wA6NGUAJ4OiKhVC93", {font: '25px Arial',fill:'#ffffff'});
+      //feedbackLabel = new form(this.game, 80,game.world.height-240, "Click here to send feedback! Thanks for playing on Desktop!", "https://goo.gl/forms/wA6NGUAJ4OiKhVC93", {font: '25px Arial',fill:'#ffffff'});
+      feedbackLabel = new Link(this.game, 80,game.world.height-240, "Click here to send feedback! Thanks for playing on Desktop!", "https://goo.gl/forms/wA6NGUAJ4OiKhVC93", {font: '25px Arial',fill:'#ffffff'});
     }
 
     var wkey= game.input.keyboard.addKey(Phaser.Keyboard.W);
