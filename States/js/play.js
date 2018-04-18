@@ -20,6 +20,7 @@ class Item
     this.gameRef = gameRef;
     this.type = game.add.sprite(startx, starty, type);
     game.physics.arcade.enable(this.type);
+
     this.type.anchor.setTo(.5,.5);
     this.type.body.bounce.y = 0.2;//0.2;
     this.type.body.bounce.x = .2;
@@ -27,6 +28,10 @@ class Item
     this.type.body.angularDrag = 100;
     this.type.body.friction = 100;
     this.type.body.damping = .5;
+    if(this.type.key == 'gator')
+    {
+      this.type.scale.setTo(1,2);
+    }
     this.type.body.collideWorldBounds = false;
     this.pickedUp = false;
     this.user = null; //Will be a sprite
@@ -59,9 +64,24 @@ class Item
         }
         else if(this.type.key == 'gator')
         {
-          game.add.tween(this.type).to( { angle: 45 }, 50, 'Bounce', true);
+          //game.add.tween(this.type).to( { angle: 45 }, 50, 'Bounce', true);
+          this.swingPart1();
         }
       }
+    }
+
+    swingPart1()
+    {
+      this.type.body.angularVelocity += 400;
+      console.log(this)
+    //  game.time.events.add(Phaser.Timer.SECOND, this.swingPart2());
+
+
+
+    }
+    swingPart2()
+    {
+    //  this.type.body.angularVelocity = 0;
     }
     throwItem(holder) { //Takes the holder sprite as a parameter to calculate which direction he's facing
       console.log("You threw item!!");
@@ -194,9 +214,31 @@ class Item
       }
       else
       {
-
+        if(this.type.key == 'bottle')
+        {
           this.type.body.position.x = this.user.body.position.x;
           this.type.body.position.y = this.user.body.position.y;
+        }
+        else { //The gator will have a different 'offset' when held
+          if(this.type.body.scale > 0)
+          {
+            this.type.body.position.x = this.user.body.position.x - 20;
+            this.type.body.position.y = this.user.body.position.y;
+          }
+          else
+          {
+            this.type.body.position.x = this.user.body.position.x + 20;
+            this.type.body.position.y = this.user.body.position.y;
+          }
+        }
+
+          if(this.type.body.angularVelocity < 350)
+          {
+            this.type.body.angularVelocity = 0;
+            this.type.angle = 0;
+          }
+
+
           //Can't follow user, check if it falls off the map
           if(this.type.body.position.x < -50 || this.type.body.position.x > 900)
           {
@@ -461,7 +503,7 @@ class dj extends Fighter {
 
 
 var playState={
-  
+
 
   hitPlayer1: function(){
 
@@ -632,10 +674,12 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
       {
 
         item1.useItem(Fighter);
-
+        if(item1.type.key == 'bottle')
+        {
         item1.user = null;
         item1.pickedUp = false;
         Fighter.character.hasItem = false;
+        }
 
       }
     Fighter.shielding = false;
@@ -669,6 +713,7 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
       jumpSound.play();
       Fighter.jumps += 1;
       Fighter.shielding = false;
+      Fighter.character.animations.play('jump');
   }
   else if (Fighter.controller1.leftpress && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
@@ -856,10 +901,13 @@ else if(Fighter.controlnum > 0){
       {
 
         item1.useItem(Fighter);
-
+        if(item1.type.key == 'bottle')
+        {
         item1.user = null;
         item1.pickedUp = false;
         Fighter.character.hasItem = false;
+        }
+
 
       }
     Fighter.shielding = false;
@@ -893,6 +941,7 @@ else if(Fighter.controlnum > 0){
       jumpSound.play();
       Fighter.jumps += 1;
       Fighter.shielding = false;
+      Fighter.character.animations.play('jump');
   }
   else if (Fighter.controller1.left.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
