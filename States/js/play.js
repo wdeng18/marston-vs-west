@@ -15,43 +15,22 @@ class crowd{
 
 class Item
 {
-  constructor(type, startx, starty, gameRef)
+  constructor(type, startx, starty)
     {
-    this.gameRef = gameRef;
     this.type = game.add.sprite(startx, starty, type);
     game.physics.arcade.enable(this.type);
-
-    this.type.anchor.setTo(.5,.5);
-    this.type.body.bounce.y = 0.2;//0.2;
-    this.type.body.bounce.x = .2;
+    this.type.body.bounce.y = 0;//0.2;
     this.type.body.gravity.y = 400;
-    this.type.body.angularDrag = 100;
-    this.type.body.friction = 100;
-    this.type.body.damping = .5;
-    if(this.type.key == 'gator')
-    {
-      this.type.scale.setTo(1,2);
-    }
     this.type.body.collideWorldBounds = false;
     this.pickedUp = false;
     this.user = null; //Will be a sprite
-    //These three variables help control the various situations that items can be in
     this.thrown = false;
     this.active = false;
-    this.inAir = false;
-    //Tween shit
-    //this.spin = game.add.tween(this.type).to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, true); //the spinning tween
-    //this.spin.pause(); //Dont make it play on spawn
-    //this.spin.onComplete.removeAll(); //Needed to reuse same tween property
     }
-
     useItem (target) { //Only call if item has a user and is pickedUp
       //When you use the item, first check the type of item used, then do the approipiate action
-      this.type.angle = 0;
-      this.type.body.angularVelocity = 0;
       if(this.pickedUp && this.user != null)
       {
-        this.inAir = false;
         console.log("Used item!")
         console.log(this);
         if(this.type.key == 'bottle') //heal the player and destroy bottle
@@ -60,69 +39,41 @@ class Item
           this.type.destroy();
           this.type = null;
           target.health += 10;
-          game.time.events.add(Phaser.Timer.SECOND * 2, this.spawnItem, this); //After 2 seconds, spawn the item
-        }
-        else if(this.type.key == 'gator')
-        {
-          //game.add.tween(this.type).to( { angle: 45 }, 50, 'Bounce', true);
-          this.swingPart1();
+          game.time.events.add(Phaser.Timer.SECOND * 2, this.spawnItem, this);
         }
       }
     }
-
-    swingPart1()
-    {
-      this.type.body.angularVelocity += 400;
-      console.log(this)
-    //  game.time.events.add(Phaser.Timer.SECOND, this.swingPart2());
-
-
-
-    }
-    swingPart2()
-    {
-    //  this.type.body.angularVelocity = 0;
-    }
     throwItem(holder) { //Takes the holder sprite as a parameter to calculate which direction he's facing
       console.log("You threw item!!");
-      //this.spin = game.add.tween(this.type).to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, true);
-      this.type.angle = 0;
-      this.type.body.angularVelocity = 0;
       if(holder.character.scale.x < 0)
       { //If they user is facing left
           itemSound.play();
           console.log("facing left");
-
-          this.type.body.velocity.x -= 300;
+          this.type.body.velocity.x -= 800;
           this.type.body.velocity.y -= 200;
           holder.hasItem = false;
+          game.time.events.add(Phaser.Timer.SECOND * .7, this.stopVelocity, this);
           this.thrown = true;
           this.active = true;
-          this.inAir = true;
-          this.type.body.angularVelocity = 300;
-          //this.spin.resume();
       }
       else
       {
           itemSound.play();
           console.log("facing right");
-
-          this.type.body.velocity.x += 300;
+          this.type.body.velocity.x += 800;
           this.type.body.velocity.y -= 200;
           this.pickedUp = false;
           holder.hasItem = false;
+          game.time.events.add(Phaser.Timer.SECOND * .7, this.stopVelocity, this);
           this.thrown = true;
           this.active = true;
-          this.inAir = true;
-          this.type.body.angularVelocity = 300;
-          //this.spin.resume();
       }
     }
     itemCollision(target) //target is Fighter sprite who is getting hit by thrown item
     {
-        console.log("In itemCollision w/target");
-      if(this.thrown && this.active && game.physics.arcade.overlap(target.character, this.type)) //active controls when the damage is applied ie only apply it once
-      { console.log("deal the item throw damage")
+
+      if(this.thrown && this.active) //active controls when the damage is applied ie only apply it once
+      {
         if(this.type.body.velocity.x > 0) //If item is thrown to the right, obv. the target is gonna fly to the right
         {
             target.hitVelocity += 200;
@@ -139,38 +90,16 @@ class Item
         this.active = false;
 
       }
-
     }
     spawnItem() {
       //Called after a timer goes off to reassign type and change position of item (allows for a reusable item)
       //For now, respawn it default as a bottle
-        this.inAir = true;
         this.user = null;
-        this.type.angle = 0;
-
-        let itemSelect = Math.floor(Math.random() * Math.floor(1)); // A random number generator of integers from 0 to 1 used to randomly spawn an item
-        //Depending on the random selection, spawn a random item
-        switch(itemSelect)
-        {
-          case 0:
-            this.type = game.add.sprite(game.world.width * .5, game.world.height*.5, 'bottle');
-            break;
-          case 1:
-            this.type = game.add.sprite(game.world.width * .5, game.world.height*.5, 'gator');
-            break;
-        }
-
+        this.type = game.add.sprite(game.world.width * .5, game.world.height*.5, 'bottle');
         game.physics.arcade.enable(this.type);
-        this.type.anchor.setTo(.5,.5);
-        this.type.body.bounce.y = .2;//0.2;
-        this.type.body.bounce.x = .2;
+        this.type.body.bounce.y = 0;//0.2;
         this.type.body.gravity.y = 400;
-        this.type.body.angularDrag = 100;
-        this.type.body.friction = 100;
-        this.type.body.mass = 1;
-        this.type.body.DYNAMIC;
         this.type.body.collideWorldBounds = false;
-        this.active = false;
     }
     xDistCheck(target) { //Get the distance between the item and the target(probably the player in most cases)
       if(this.type != null)
@@ -189,15 +118,7 @@ class Item
 
     alignToTarget() //Should always have a type when called due to update function
     //Also checks if the item falls off the map
-    {//This checks if the item is touching the ground, and sets its values back to default
-      if(this.type.body.touching.down)
-      {
-        this.type.body.velocity.set(0,this.type.body.velocity.y);
-        this.type.body.angularVelocity = 0;
-        this.type.angle = 0;
-        this.thrown = false;
-        this.inAir = false;
-      }
+    {
       if(this.user == null)
       {
         //Can't follow user, check if it falls off the map
@@ -214,31 +135,9 @@ class Item
       }
       else
       {
-        if(this.type.key == 'bottle')
-        {
+
           this.type.body.position.x = this.user.body.position.x;
           this.type.body.position.y = this.user.body.position.y;
-        }
-        else { //The gator will have a different 'offset' when held
-          if(this.type.body.scale > 0)
-          {
-            this.type.body.position.x = this.user.body.position.x - 20;
-            this.type.body.position.y = this.user.body.position.y;
-          }
-          else
-          {
-            this.type.body.position.x = this.user.body.position.x + 20;
-            this.type.body.position.y = this.user.body.position.y;
-          }
-        }
-
-          if(this.type.body.angularVelocity < 350)
-          {
-            this.type.body.angularVelocity = 0;
-            this.type.angle = 0;
-          }
-
-
           //Can't follow user, check if it falls off the map
           if(this.type.body.position.x < -50 || this.type.body.position.x > 900)
           {
@@ -253,13 +152,10 @@ class Item
 
       }
     }
-
-    onGround() {
-
-      this.inAir = false;
-
-
-
+    stopVelocity() {
+      this.type.body.velocity.x = 0;
+      this.type.body.velocity.y = 0;
+      this.thrown = false;
     }
 
 
@@ -504,12 +400,10 @@ class dj extends Fighter {
 
 var playState={
 
-
   hitPlayer1: function(){
 
 	if (Player1.m == 0 && !Player1.shielding){
     hitSound.play();
-    game.time.slowMotion = 4.0;
 		Player1.health += 5;
 		Player1.hitVelocity = Player2.character.scale.x * Player1.health * 2;
 
@@ -567,12 +461,6 @@ yHitVelocity: function(Fighter)
   Fighter.character.body.velocity.y = -(Math.pow(Fighter.health, 1.25));
   console.log("during call")
 },
-addSpin: function(item)
-{
-  console.log("added spin again");
-    //item.spin.to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, false);
-
-},
 
 updateInput: function(Fighter,cooldownNum)
 {
@@ -600,9 +488,234 @@ else
   Fighter.hitVelocity = 0;
 }
 
+//logic for gamepad
+
+
+
+if(Fighter.controlnum == 1  && testconnect1 == true){
+
+
+
+  if (nesxButton.isDown && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
+  {
+      Fighter.character.body.velocity.x = 0;
+      Fighter.character.animations.play('shield');
+      Fighter.shielding = true;
+      if(Fighter.character.hasItem) //If he has an item, THROW IT!
+      {
+
+        item1.throwItem(Fighter);
+
+        item1.user = null;
+        item1.pickedUp = false;
+        Fighter.character.hasItem = false;
+
+      }
+
+  }
+  else if (nesaButton.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
+  {
+      //logic to change direction facing
+      if (Fighter.character.scale.x < 0 ){
+        Fighter.character.body.velocity.x = -250 - Fighter.moveSpeed;
+      }
+      else
+      {
+        Fighter.character.body.velocity.x = 250 + Fighter.moveSpeed;
+      }
+      Fighter.character.animations.play('punch');
+      Fighter.weapon1.fire();
+      //If really freaking close to item, and if he isnt holding something, use it!
+      if((item1.xDistCheck(Fighter.character) < 150) && (item1.yDistCheck(Fighter.character) < 150) && !(Fighter.character.hasItem) && (item1.user == null))
+      {
+        item1.user = Fighter.character;
+        item1.pickedUp = true;
+        Fighter.character.hasItem = true;
+        console.log("close to item");
+
+
+      }
+
+      Fighter.shielding = false;
+      Fighter.hitSwitchPunch = true;
+
+  }
+  else if (nesbButton.isDown == true && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
+  {
+      //  Move to the right
+
+      //logic to change direction facing
+      if (Fighter.character.scale.x < 0 ){
+        Fighter.character.body.velocity.x = -350 - Fighter.moveSpeed;
+      }
+      else
+      {
+        Fighter.character.body.velocity.x = 350 + Fighter.moveSpeed;
+      }
+      Fighter.character.animations.play('kick');
+      //Fighter.hitCD = 60;
+      Fighter.weapon1.fire();
+
+      if(Fighter.character.body.touching.down)
+      {
+        Fighter.character.body.velocity.y = -200;
+      }
+      if(Fighter.character.hasItem) //If he has an item, USE IT!
+      {
+
+        item1.useItem(Fighter);
+
+        item1.user = null;
+        item1.pickedUp = false;
+        Fighter.character.hasItem = false;
+
+      }
+    Fighter.shielding = false;
+    Fighter.hitSwitchKick = true;
+  }
+
+  else if (Fighter.controller1.bpress && Fighter.controller1.ypress)
+  {
+    console.log("Up Special");
+  }
+  else if (Fighter.controller1.bpress && Fighter.controller1.rightpress)
+  {
+    console.log("Right Special");
+  }
+  else if (Fighter.controller1.bpress && Fighter.controller1.leftpress)
+  {
+    console.log("Left Special");
+  }
+  else if (Fighter.controller1.bpress && Fighter.controller1.downpress)
+  {
+    console.log("Down Special");
+  }
+  else if (Fighter.controller1.bpress)
+  {
+    console.log("Normal Special")
+  }
+
+  else if ( nesyButton.isDown && Fighter.jumps <= 5  && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
+  {
+      Fighter.character.body.velocity.y = -350 + Fighter.jumpSpeed;
+      jumpSound.play();
+      Fighter.jumps += 1;
+      Fighter.shielding = false;
+  }
+  else if (nescontroller._axes[1] == -1 && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
+  {
+
+      if(Fighter.character.body.touching.down)
+      {
+        Fighter.jumps = 0;
+    }
+
+      if (Fighter.character.scale.x > 0 ){
+      Fighter.character.scale.x *=-1;
+      Fighter.weapon1.trackSprite(Fighter.character, 28, -40, true);
+      }
+      if (Fighter.character.body.touching.down)
+      {
+        Fighter.character.body.velocity.x = -250 + Fighter.hitVelocity;
+      }
+      else
+      {
+        Fighter.character.body.velocity.x = -200 + Fighter.hitVelocity;
+      }
+      //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
+      if (Fighter.hitVelocity != 0)
+      {
+        if (Fighter.hitVelocity + -125 < 0){
+          Fighter.hitVelocity = 0;
+        }
+        else
+        {
+          Fighter.hitVelocity += -125;
+        }
+      }
+      console.log(Fighter);
+      Fighter.character.animations.play('right');
+      Fighter.shielding = false;
+  }
+  else if (nescontroller._axes[1] == 1 && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
+  {
+      //  Move to the right
+      if(Fighter.character.body.touching.down)
+      {
+        Fighter.jumps = 0;
+    }
+      //logic to change direction facing
+      if (Fighter.character.scale.x < 0 ){
+      Fighter.character.scale.x *=-1;
+      Fighter.weapon1.trackSprite(Fighter.character, 28, 40, true);
+      }
+      if (Fighter.character.body.touching.down)
+      {
+        Fighter.character.body.velocity.x = 250 + Fighter.hitVelocity;
+      }
+      else
+      {
+        Fighter.character.body.velocity.x = 200 + Fighter.hitVelocity;
+      }
+      //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
+      if (Fighter.hitVelocity != 0)
+      {
+        if (Fighter.hitVelocity + 125 > 0){
+          Fighter.hitVelocity = 0;
+        }
+        else
+        {
+          Fighter.hitVelocity += 125;
+        }
+      }
+      Fighter.character.animations.play('right');
+      Fighter.shielding = false;
+  }
+
+  else
+  {
+      //Code that assigns the velocity of the player based on the current hitVelocity. Keeps track of jump count and determines the idle animation of the character
+    if (Fighter.hitVelocity != 0)
+    {
+      Fighter.character.body.velocity.x = Fighter.hitVelocity;
+    }
+    else
+    {
+      Fighter.character.body.velocity.x = 0;
+    }
+      if (Fighter.stunCounter > 0)
+      {
+        Fighter.character.animations.play('ko');
+      }
+      else
+      {
+        //Fighter.character.animations.play('idle');
+      }
+      Fighter.shielding = false;
+
+      if(Fighter.character.body.touching.down)
+      {
+        Fighter.jumps = 0;
+    }
+  }
+  if(nesaButton.isDown == false && Fighter.hitSwitchPunch)
+  {
+    Fighter.hitCD = 15;
+    Fighter.hitSwitchPunch = false;
+  }
+  if (nesbButton.isDown == false && Fighter.hitSwitchKick)
+  {
+    Fighter.hitCD = 15;
+    Fighter.hitSwitchKick= false;
+  }
+    //console.log('end of vpad read');
+}
+
+//end of gamepad
+
 
 //control logic for virtual keys
-if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
+else if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
 
 
 
@@ -674,12 +787,10 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
       {
 
         item1.useItem(Fighter);
-        if(item1.type.key == 'bottle')
-        {
+
         item1.user = null;
         item1.pickedUp = false;
         Fighter.character.hasItem = false;
-        }
 
       }
     Fighter.shielding = false;
@@ -713,7 +824,6 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
       jumpSound.play();
       Fighter.jumps += 1;
       Fighter.shielding = false;
-      Fighter.character.animations.play('jump');
   }
   else if (Fighter.controller1.leftpress && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
@@ -866,9 +976,7 @@ else if(Fighter.controlnum > 0){
         item1.pickedUp = true;
         Fighter.character.hasItem = true;
         console.log("close to item");
-
-
-      }
+    }
 
 
       //Fighter.hitCD = 30;
@@ -901,13 +1009,10 @@ else if(Fighter.controlnum > 0){
       {
 
         item1.useItem(Fighter);
-        if(item1.type.key == 'bottle')
-        {
+
         item1.user = null;
         item1.pickedUp = false;
         Fighter.character.hasItem = false;
-        }
-
 
       }
     Fighter.shielding = false;
@@ -941,7 +1046,6 @@ else if(Fighter.controlnum > 0){
       jumpSound.play();
       Fighter.jumps += 1;
       Fighter.shielding = false;
-      Fighter.character.animations.play('jump');
   }
   else if (Fighter.controller1.left.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
@@ -1109,11 +1213,13 @@ else if(Fighter.controlnum > 0){
     //Invisible moment
     if (Fighter.m < 60 && Fighter.m != 0){
       Fighter.character.body.gravity.y = 0;
+      Fighter.character.body.velocity.x = 0;
       Fighter.character.visible = false;
     }
     //Book Crashing down Animation
     else if(Fighter.m >= 60 && Fighter.m < 120){
       Fighter.character.body.gravity.y = 800;
+      Fighter.character.body.velocity.x = 0;
       Fighter.character.visible = true;
     }
     else{
@@ -1160,27 +1266,25 @@ playerHitStun: function(Fighter)
 
   KO:function(Fighter){
       if(Fighter.character.body.position.x < -50 || Fighter.character.body.position.x > 900){
-        Fighter.character.hasItem = false;
+          Fighter.character.hasItem = false;
          deathSound.play();
-         this.respawn(Fighter);
          var live = Fighter.stocks.getFirstAlive();
          if(live)
          {
            live.kill();
          }
-
+         this.respawn(Fighter);
 
       }
       else if(Fighter.character.body.position.y > 700 || Fighter.character.body.position.y < -100){
         Fighter.character.hasItem = false;
          deathSound.play();
-         this.respawn(Fighter);
          var live = Fighter.stocks.getFirstAlive();
          if(live)
          {
            live.kill();
          }
-
+         this.respawn(Fighter);
       }
   },
 
@@ -1199,8 +1303,7 @@ playerHitStun: function(Fighter)
       //  We're going to be using physics, so enable the Arcade Physics system
       w= 800;
       h = 600;
-      game.time.advancedTiming = true;
-
+      game.time.advandedTiming = true;
 
       //create a timer for the game
       timer = game.time.create(false);
@@ -1211,10 +1314,62 @@ playerHitStun: function(Fighter)
       music = game.add.audio('allstar');
       music.loopFull();
 
+      testconnect1 = false;
+
+    //phaser game code 'book'
+    //indicator = game.add.sprite(100,100, 'dude');
+    //indicator.scale.x = indicator.scale.y = 2;
+    //indicator.animations.frame = 1;
+
+   // game.input.gamepad.start();
+
+    // To listen to buttons from a specific pad listen directly on that pad game.input.gamepad.padX, where X = pad 1-4
+    //nescontroller = game.input.gamepad.pad1;
+
+    //game.input.onDown.add(dump, this);
+
+
+
+
+      
+      //try to add nes controller support
+      /*game.input.gamepad.start();
+    
+  	  	var nesaButton = null;
+	 	var nesbButton = null; 
+	 	var nesxButton = null;
+	 	var nesyButton = null;
+	 	var nesleftButton = null;
+	 	var nesrightButton = null;
+	 	var nesupButton = null;
+	 	var nesdownButton = null;
+
+
+    nescontroller = game.input.gamepad.pad1;
+ 
+    nescontroller.addCallbacks(this, {
+        onConnect: function(){
+        	console.log("controller recognized and connected!");
+            // you could use a different button here if you want...
+            nesaButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_1);
+            nesbButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_2);
+            nesxButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_3);
+            nesyButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_4);
+
+            nesleftButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_5);
+			nesrightButton= nescontroller.getButton(Phaser.Gamepad.BUTTON_6);
+			nesupButton   = nescontroller.getButton(Phaser.Gamepad.BUTTON_7);
+			nesdownButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_8);            
+
+        }
+    });*/
+ 	
+
+      //end of controller setup
+
 
       if(chosenStageName == 'marstonPic')
       {
-
 
       //Background for our game
       game.add.sprite(0, 0, 'sky');
@@ -1224,7 +1379,6 @@ playerHitStun: function(Fighter)
 
       //  Enable physics for any object that is created in this group
       platforms.enableBody = true;
-      platforms.friction = 100;
 
       // Create the ground.
       var ground = platforms.create(110, game.world.height - 30, 'ground');
@@ -1274,7 +1428,6 @@ deathSound = game.add.audio('deathSound');
 jumpSound = game.add.audio('jumpSound');
 itemSound = game.add.audio('itemSound');
 buttonSound = game.add.audio('buttonSound');
-buttonSound.volume -= .5;
 
 if(game.device.android || game.device.iOS)
 {
@@ -1327,7 +1480,7 @@ else
 //console.log(Player1.controlnum);
 
 //Create an item
-item1 = new Item('gator', game.world.width * .5, game.world.height * .5, this);
+item1 = new Item('bottle', game.world.width * .5, game.world.height * .5);
 
 
 if(Player1.controlnum == -1){
@@ -1484,6 +1637,10 @@ timerText.anchor.setTo(.5,.5);
 
 
   update: function() {
+
+
+
+
     //console.log('Inside update function');
     game.physics.arcade.overlap(Player1.character, this.win, this.Win, null, this);
     game.physics.arcade.overlap(Player2.character, this.win, this.Win, null, this);
@@ -1493,14 +1650,10 @@ timerText.anchor.setTo(.5,.5);
     game.physics.arcade.collide(Player2.character, platforms );
     game.physics.arcade.collide(Player1.character,Player2.character);
     //add physics for item (eventually just add items to a group and use collision detection for the group)
-    game.physics.arcade.collide(item1.type, platforms, item1.onGround() );
+    game.physics.arcade.collide(item1.type, platforms);
 
     //using overlap to calculate the knockback when an item is thrown since we dont want the items trajectory to change
-    //This is always colliding? even when i replace it with random stuff like player1.weapon1.bullets
-
-
-
-      game.physics.arcade.overlap(Player2.character, item1.type, item1.itemCollision(Player2), null, this);
+    game.physics.arcade.overlap(Player2.character, item1.type, item1.itemCollision(Player2), null, this);
 
 
     game.physics.arcade.overlap(Player1.weapon1.bullets, Player2.character, this.hitPlayer2);
@@ -1510,21 +1663,144 @@ timerText.anchor.setTo(.5,.5);
     nameText2.alignTo(Player2.character,Phaser.TOP, 16);
     if(item1.type != null)
     {
-      if(item1.inAir)
-      {
-        item1.angle += 5;
-      }
-      else
-      {
-        item1.alignToTarget();
-      }
-
+      item1.alignToTarget();
     }
 
 
+    //show whether controller connected or not
+    // Pad "connected or not" indicator
+    //if (game.input.gamepad.supported && game.input.gamepad.active && pad1.connected)
+    
+    //console.log(pad1);
+
+    //try to connect to controller
+
+    if(testconnect1 == false){
+
+          //try to add nes controller support
+      	//game.input.gamepad.start();
+    	
+    	/*
+  	  	var nesaButton = null;
+	 	var nesbButton = null; 
+	 	var nesxButton = null;
+	 	var nesyButton = null;
+	 	var nesleftButton = null;
+	 	var nesrightButton = null;
+	 	var nesupButton = null;
+	 	var nesdownButton = null;
+		*/
+
+	    	nescontroller = game.input.gamepad.pad1;
+ 
+    		nescontroller.addCallbacks(this, {
+        		onConnect: function(){
+        		testconnect1 = true;
+	        	console.log("controller recognized and connected! buttons set!");
+	            // you could use a different button here if you want...
+
+	            //buttons seem to go from 0 to 10
+	            //nesaxes = nescontroller.
+	            nesaButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_1);
+	            nesbButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_2);
+	            nesxButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_0);
+	            nesyButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_3);
+	            nesrtrigButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_4);
+	            nesltrigButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_5);
+
+				nesrightButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_6);
+				nesdownButton   = nescontroller.getButton(Phaser.Gamepad.BUTTON_10);
+				nesleftButton   = nescontroller.getButton(Phaser.Gamepad.BUTTON_10);
+				nesupButton   = nescontroller.getButton(Phaser.Gamepad.BUTTON_7);
+				
+				nesselectButton = nescontroller.getButton(Phaser.Gamepad.BUTTON_8);
+				nesstartButton   = nescontroller.getButton(Phaser.Gamepad.BUTTON_9);            
+
+        	}
+
+    	});
+    	game.input.gamepad.start();
+    }
+    //end of connect try
+    	
+    /*if (nescontroller.connected && game.input.gamepad.active && game.input.gamepad.supported)
+    {
+        //indicator.alpha = 1;
+        console.log("controller connected")
+    }
+    else
+    {
+	    console.log("controller not connected")
+        //indicator.alpha = 1;
+    }*/
 
 
+    //console.log(nesaButton);
+    //console.log(nesbButton);
+    //console.log(nesxButton);
+    /*
+    if(nescontroller.connected){
 
+	    if(nesaButton.isDown){
+	    	console.log("a button works!");
+	    	//console.log(nescontroller);
+	    	//console.log(nescontroller._axes[0]); //center?
+	    	//console.log(nescontroller._axes[1]);//left = -1, right = 1
+	    	//console.log(nescontroller._axes[2]);//left right
+	    	//console.log(nescontroller._axes[3]);//left right
+	    	//console.log(nescontroller._axes[4]);//left right
+	    	//console.log(nescontroller._axes[5]);//up = -1 down = 1
+	    }
+	    if(nescontroller._axes[1] == 1){
+	    	console.log("D-Pad Right!")
+	    	
+	    }
+	    if(nescontroller._axes[1] == -1){
+	    	console.log("D-Pad Left!")
+	    }
+	    if(nescontroller._axes[5] == 1){
+	    	console.log("D-Pad Down!")
+	    }
+	    if(nescontroller._axes[5] == -1){
+	    	console.log("D-Pad Up!")
+	    }
+	    if(nesbButton.isDown){
+	    	console.log("b button works!");
+	    }
+	    if(nesxButton.isDown){
+	    	console.log("x button works!");
+	    }
+	    if(nesyButton.isDown){
+	    	console.log("y button works!");
+	    }
+	    if(nesleftButton.isDown){
+	    	console.log("left button works!");
+	    }
+	    if(nesrightButton.isDown){
+	    	console.log("right button works!");
+	    }
+	    if(nesdownButton.isDown){
+	    	console.log("down button works!");
+	    }
+	    if(nesupButton.isDown){
+	    	console.log("up button works!");
+	    }
+	    if(nesselectButton.isDown){
+	    	console.log("select button works!");
+	    }
+	    if(nesstartButton.isDown){
+	    	console.log("start button works!");
+	    }
+	    if(nesltrigButton.isDown){
+	    	console.log("right trigger button works!");
+	    }
+	    if(nesrtrigButton.isDown){
+	    	console.log("left trigger button works!");
+	    }
+		
+
+	}
+	*/
 
     if(controlOptionAI == -2)
     {
