@@ -56,12 +56,25 @@ class Item
           itemSound.play();
           this.type.destroy();
           this.type = null;
+          target.health -= 10;
+          game.time.events.add(Phaser.Timer.SECOND * 2, this.spawnItem, this); //After 2 seconds, spawn the item
+        }
+        else if(this.type.key == 'gator') //Current does the same thing as bottle but does damange to player instead
+        {
+          itemSound.play();
+          this.type.destroy();
+          this.type = null;
           target.health += 10;
           game.time.events.add(Phaser.Timer.SECOND * 2, this.spawnItem, this); //After 2 seconds, spawn the item
         }
-        else if(this.type.key == 'gator')
+        else if(this.type.key == 'helmet') //Current does the same thing as bottle but does damange to player instead
         {
-          game.add.tween(this.type).to( { angle: 45 }, 50, 'Bounce', true);
+          itemSound.play();
+
+          this.gameRef.respawn(target);
+          game.time.events.add(Phaser.Timer.SECOND * 2, this.spawnItem, this); //After 2 seconds, spawn the item
+          this.type.destroy();
+          this.type = null;
         }
       }
     }
@@ -71,6 +84,8 @@ class Item
       this.type.angle = 0;
       this.type.body.angularVelocity = 0;
       this.type.body.rotation = 0;
+      this.type.body.velocity.x = 0;
+      this.type.body.velocity.y = 0;
       if(holder.character.scale.x < 0)
       { //If they user is facing left
           itemSound.play();
@@ -82,7 +97,7 @@ class Item
           this.thrown = true;
           this.active = true;
           this.inAir = true;
-          this.type.body.angularVelocity = 300;
+        //  this.type.body.angularVelocity = 300;
           //this.spin.resume();
       }
       else
@@ -97,7 +112,7 @@ class Item
           this.thrown = true;
           this.active = true;
           this.inAir = true;
-          this.type.body.angularVelocity = 300;
+        //  this.type.body.angularVelocity = 300;
           //this.spin.resume();
       }
     }
@@ -131,16 +146,33 @@ class Item
         this.user = null;
 
 
+//Depending on the random selection, spawn a random item
+        let itemSelect = Math.floor(Math.random() * 3); // A random number generator of integers from 0 to 1 used to randomly spawn an item
+        let itemPosNeg = 0;
+        let signChoice = Math.floor(Math.random() * 2);
+        switch(signChoice)
+        {
+          case 0:
+            itemPosNeg = 1;
+            break;
+          case 1:
+            itemPosNeg = -1;
+            break;
+        }
 
-        let itemSelect = Math.floor(Math.random() * Math.floor(1)); // A random number generator of integers from 0 to 1 used to randomly spawn an item
-        //Depending on the random selection, spawn a random item
+        let itemOffset = Math.floor(Math.random() * 300);
+        console.log("Item Offset: " + itemOffset);
+        console.log("itemPosNeg: " + itemPosNeg);
         switch(itemSelect)
         {
           case 0:
-            this.type = game.add.sprite(game.world.width * .5, game.world.height*.5, 'bottle');
+            this.type = game.add.sprite(game.world.width * .5 + (itemOffset * itemPosNeg), game.world.height*.5, 'gator');
             break;
           case 1:
-            this.type = game.add.sprite(game.world.width * .5, game.world.height*.5, 'gator');
+            this.type = game.add.sprite(game.world.width * .5 + (itemOffset * itemPosNeg), game.world.height*.5, 'bottle');
+            break;
+          case 2:
+            this.type = game.add.sprite(game.world.width * .5 + (itemOffset * itemPosNeg), game.world.height* .5, 'helmet');
             break;
         }
 
@@ -1135,11 +1167,13 @@ playerHitStun: function(Fighter)
       h = 600;
       game.time.advancedTiming = true;
 
-
       //create a timer for the game
       timer = game.time.create(false);
       timerEvent = timer.add(Phaser.Timer.MINUTE * gameMinutes + Phaser.Timer.SECOND * gameSeconds, this.timeOutGame, this);
       timer.start();
+
+      var esckey= game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+      esckey.onDown.addOnce(this.timeOutGame);
 
       //Play music
       music = game.add.audio('allstar');

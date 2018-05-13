@@ -109,6 +109,9 @@ var winState={
     var wkey= game.input.keyboard.addKey(Phaser.Keyboard.W);
     wkey.onDown.addOnce(this.start,this);
 
+    var esckey= game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    esckey.onDown.addOnce(this.start,this);
+
 
     /*
     if(game.device.android || game.device.iOS)
