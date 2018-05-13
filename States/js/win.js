@@ -68,7 +68,7 @@ var winState={
     {
       var winLabel=game.add.text(80,80,'Player 1 won!',{font: '50px Arial',fill: '#ffffff'});
     }
-    else if(Player1.lives = Player2.lives)
+    else if(Player1.lives == Player2.lives)
     {
       var winLabel=game.add.text(80,80,"It's a tie",{font: '50px Arial',fill: '#ffffff'});
     }

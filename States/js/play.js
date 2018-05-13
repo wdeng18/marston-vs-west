@@ -34,6 +34,8 @@ class Item
     this.thrown = false;
     this.active = false;
     this.inAir = false;
+    this.type.body.rotation = 0;
+    this.type.angle = 0;
     //Tween shit
     //this.spin = game.add.tween(this.type).to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, true); //the spinning tween
     //this.spin.pause(); //Dont make it play on spawn
@@ -68,6 +70,7 @@ class Item
       //this.spin = game.add.tween(this.type).to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, true);
       this.type.angle = 0;
       this.type.body.angularVelocity = 0;
+      this.type.body.rotation = 0;
       if(holder.character.scale.x < 0)
       { //If they user is facing left
           itemSound.play();
@@ -126,7 +129,8 @@ class Item
       //For now, respawn it default as a bottle
         this.inAir = true;
         this.user = null;
-        this.type.angle = 0;
+
+
 
         let itemSelect = Math.floor(Math.random() * Math.floor(1)); // A random number generator of integers from 0 to 1 used to randomly spawn an item
         //Depending on the random selection, spawn a random item
@@ -151,6 +155,8 @@ class Item
         this.type.body.DYNAMIC;
         this.type.body.collideWorldBounds = false;
         this.active = false;
+        this.type.angle = 0;
+        this.type.body.rotation = 0;
     }
     xDistCheck(target) { //Get the distance between the item and the target(probably the player in most cases)
       if(this.type != null)
@@ -361,7 +367,7 @@ class Fighter {
        for (var g = 3; g > 0; g--)
        {
 
-         if(controlnum == -1) //For the vpad
+         if(controlnum == -1 || controlnum == 1) //For the vpad
          {
            if(charName1 == 'dude')
            {
@@ -374,23 +380,11 @@ class Fighter {
              stock.anchor.setTo(.5,.5);
            }
          }
-         else if(controlnum == 1)
-         {
-           if(charName1 == 'dude')
-           {
-             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player2cssIcon');
-             stock.anchor.setTo(.5,.5);
-           }
-           else(charName1 == 'chick')
-           {
-             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
-             stock.anchor.setTo(.5,.5);
-           }
-         }
+
       }
       for(var h = 0; h < 3; h++)
       {
-         if(controlnum == 2)
+         if(controlnum == 2 || controlnum == -2)
          {
            if(charName2 == 'dude') //dude is blue, chick is orange
            {
@@ -404,20 +398,7 @@ class Fighter {
            }
 
          }
-         else if(controlnum == -2) //For the bot
-         {
-           if(charName2 == 'dude')
-           {
-             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
-             stock.anchor.setTo(.5,.5);
-           }
-           else if(charName2 == 'chick')
-           {
-             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player1cssIcon');
-             stock.anchor.setTo(.5,.5);
-           }
 
-         }
        }
        console.log("fighter made");
        //return this;
@@ -428,7 +409,7 @@ class lab extends Fighter {
     constructor(character,health,lives,startx,starty,controlnum) {
 
       super(character,health,lives,startx,starty,controlnum);
-      this.character.body.gravity.y = 200;
+      this.character.body.gravity.y = 1000;
       console.log("we created the lab construtor");
 
         this.jumpSpeed = 25;
@@ -445,7 +426,7 @@ class dj extends Fighter {
     constructor(character,health,lives,startx,starty,controlnum) {
 
       super(character,health,lives,startx,starty,controlnum);
-      this.character.body.gravity.y = 200;
+      this.character.body.gravity.y = 1000;
       console.log("we created the dj construtor");
 
         this.jumpSpeed = 75;
@@ -461,7 +442,7 @@ class dj extends Fighter {
 
 
 var playState={
-  
+
 
   hitPlayer1: function(){
 
@@ -594,7 +575,7 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
       Fighter.character.animations.play('punch');
       Fighter.weapon1.fire();
       //If really freaking close to item, and if he isnt holding something, use it!
-      if((item1.xDistCheck(Fighter.character) < 150) && (item1.yDistCheck(Fighter.character) < 150) && !(Fighter.character.hasItem) && (item1.user == null))
+      if((item1.xDistCheck(Fighter.character) < 50) && (item1.yDistCheck(Fighter.character) < 100) && !(Fighter.character.hasItem) && (item1.user == null))
       {
         item1.user = Fighter.character;
         item1.pickedUp = true;
@@ -669,6 +650,7 @@ if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
       jumpSound.play();
       Fighter.jumps += 1;
       Fighter.shielding = false;
+      Fighter.character.animations.play('jump');
   }
   else if (Fighter.controller1.leftpress && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
@@ -815,7 +797,7 @@ else if(Fighter.controlnum > 0){
       Fighter.weapon1.fire();
 
       //If really freaking close to item, and if he isnt holding something, use it!
-      if((item1.xDistCheck(Fighter.character) < 150) && (item1.yDistCheck(Fighter.character) < 150) && !(Fighter.character.hasItem) && (item1.user == null))
+      if((item1.xDistCheck(Fighter.character) < 50) && (item1.yDistCheck(Fighter.character) < 100) && !(Fighter.character.hasItem) && (item1.user == null))
       {
         item1.user = Fighter.character;
         item1.pickedUp = true;
@@ -893,6 +875,7 @@ else if(Fighter.controlnum > 0){
       jumpSound.play();
       Fighter.jumps += 1;
       Fighter.shielding = false;
+      Fighter.character.animations.play('jump');
   }
   else if (Fighter.controller1.left.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
   {
@@ -1191,7 +1174,7 @@ playerHitStun: function(Fighter)
     {
 
       //Background for our game
-      //game.add.sprite(0, 0, 'sky');
+      game.add.sprite(0, 0, 'sky');
 
       //  The platforms group contains the ground and the 2 ledges we can jump on
       platforms = game.add.group();
@@ -1200,10 +1183,18 @@ playerHitStun: function(Fighter)
       platforms.enableBody = true;
 
       // Create the ground.
-      var ground = platforms.create(110, game.world.height - 30, 'ground');
+      var ground = platforms.create(110, game.world.height - 100, 'ground');
+      var plat1 = platforms.create(110, game.world.height - 250, 'ground');
+      var plat2 = platforms.create(game.world.width - 300, game.world.height - 250, 'ground');
+      plat1.body.immovable = true;
+      plat2.body.immovable = true;
+
+
+      plat1.scale.setTo(4,1);
+      plat2.scale.setTo(4,1);
 
       //  Scale it to fit the width of the game (the original sprite is ? in size)
-      ground.scale.setTo(18, 1);
+      ground.scale.setTo(16, 1);
 
       //  This stops it from falling away when you jump on it
       ground.body.immovable = true;
@@ -1441,7 +1432,7 @@ timerText.anchor.setTo(.5,.5);
 
     //  Collide the players with the platforms and eachother
     game.physics.arcade.collide(Player1.character, platforms );
-    game.physics.arcade.collide(Player2.character, platforms );
+    game.physics.arcade.collide(Player2.character, platforms);
     game.physics.arcade.collide(Player1.character,Player2.character);
     //add physics for item (eventually just add items to a group and use collision detection for the group)
     game.physics.arcade.collide(item1.type, platforms, item1.onGround() );
