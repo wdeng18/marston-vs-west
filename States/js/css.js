@@ -3,6 +3,7 @@ var cssState={
     //Reset values to default so if player wants to play again, it does not start off "ready" to play
     charSelected1 = false;
     charSelected2 = false;
+    controlOptionAI = 2;
     charName1 = "";
     charName2 = "";
 
@@ -66,7 +67,7 @@ var cssState={
     player2BodyIcon.scale.setTo(1.5,1.5);
 
 //Chose your library: Click on label to set variable to a library, then send info later
-    var player1Label=game.add.text(game.world.width * .5 - 150 ,game.world.height-180,'Choose your Library!',{font: '25px Arial',fill:'#ffffff'});
+    var player1Label=game.add.text(150 ,50,'Choose your Library!',{font: '25px Arial',fill:'#ffffff'});
     player1Label.inputEnabled = true;
     player1Label.selected = 0;
     player1Label.librarySelected = '';
@@ -88,7 +89,7 @@ var cssState={
     });
 
 
-    var player2Label=game.add.text(game.world.width * .5 + 150 ,game.world.height-180,'Choose your Library!',{font: '25px Arial',fill:'#ffffff'});
+    var player2Label=game.add.text(game.world.width * .5 + 150 , 50,'Choose your Library!',{font: '25px Arial',fill:'#ffffff'});
     player2Label.inputEnabled = true;
     player2Label.selected = 0;
     player2Label.librarySelected = '';
@@ -119,7 +120,7 @@ var cssState={
   },
   start: function(){
     gameReadyText.text = `Game Start!`;
-    music.stop();
+    //music.stop();
     game.state.start('sss');
  },
  update: function() {
@@ -148,8 +149,8 @@ var cssState={
      gameReadyText.text = `Game ready:\nClick to start!`;
      gameReadyText.inputEnabled = true;
      gameReadyText.events.onInputUp.addOnce(function() {
-       music.stop();
-      game.state.start('sss');
+       //music.stop();
+     game.state.start('sss');
      });
 
    }

@@ -13,6 +13,148 @@ class crowd{
   }
 }
 
+class cam{
+
+	constructor(toplx, toply, w, h){
+
+		this.toplx = toplx;
+		this.toply = toply;
+		this.w = w;
+		this.h = h;
+
+		game.camera.bounds = null;
+
+
+		//this.minx = 100;
+		//this.miny = 100;
+
+		//game.camera.follow(Player1);
+    	//game.camera.deadzone = new Phaser.Rectangle(450, 350, 100, 100);
+
+		//game.camera.deadzone = new Phaser.Rectangle(toplx, toply, w, h);
+
+	}
+
+	updatecamera(sprite1,sprite2,xmin, ymin,xmax, ymax){
+
+		//console.log(game.camera.x);
+		//console.log(game.camera.y);
+		//console.log(xdist);
+		//console.log(ydist);
+
+		//update topleft x coordinate
+
+		//console.log(game.camera.x);
+
+		//average pixel positions of sprite1 and sprite2
+		var xtarget = 0.5*(sprite2.character.body.position.x + sprite1.character.body.position.x);
+		var ytarget = 0.5*(sprite2.character.body.position.y -sprite1.character.body.position.y);
+
+		if(xtarget < 0){
+			xtarget = xtarget*-1;
+		}
+
+		if(ytarget < 0){
+			ytarget = ytarget*-1;
+		}
+
+		//math for scaling (camera zoom)
+		var xscaletarget = (sprite2.character.body.position.x - sprite1.character.body.position.x);
+		var yscaletarget = (sprite2.character.body.position.y -sprite1.character.body.position.y);
+
+
+		//adjust position to be adjusted for topleft corner of camerabox
+		xtarget -= 300;
+
+		game.camera.x += 0.2*(xtarget-game.camera.x);
+
+		//console.log(game.camera.x);
+		//update topleft y coordinate
+		game.camera.y += 0.2*((-1*ytarget)-game.camera.y);
+
+		w = 0;
+		h = 0;
+		if(xtarget < xmin){
+			w = xmin;
+		}
+		else if(xtarget > xmax){
+			w = xmax;
+		}
+		else{
+			w = xtarget;
+		}
+
+		//update camera height
+		if(ytarget < ymin){
+			h = ymin;
+		}
+		else if(ytarget > ymax){
+			h = ymax;
+		}
+		else{
+			h = ytarget;
+		}
+
+		//game.camera.setSize(w,h);
+
+		/*
+		//zoom in
+		if(xscaletarget < 0){
+			xscaletarget = xscaletarget * -1;
+		}
+		console.log(xscaletarget);
+		if(xscaletarget < 100 && xscaletarget > 50){
+			game.camera.scale.x += 0.001;
+			//game.camera.scale.y += 0.001;
+		}
+		//zoom out
+		if(xscaletarget >= 100  && xscaletarget <70){
+			game.camera.scale.x -= 0.001;
+			game.camera.scale.y -= 0.001;
+		}
+		*/
+
+
+		//not working???
+		/*
+		//update camera width
+		if(xtarget < xmin){
+			game.camera.width = xmin;
+		}
+		else if(xtarget > xmax){
+			game.camera.width = xmax;
+		}
+		else{
+			game.camera.width = xtarget;
+		}
+
+		//update camera height
+		if(ytarget < ymin){
+			game.camera.height = ymin;
+		}
+		else if(ytarget > ymax){
+			game.camera.height = ymax;
+		}
+		else{
+			game.camera.height = ytarget;
+		}
+		*/
+
+		//console.log(game.camera.width);
+		//console.log(game.camera.height);
+
+
+		//update width
+		//game.camera.deadzone.width = ;
+
+		//update height
+		//game.camera.deadzone.height =;
+	}
+
+
+}
+
+
 class Item
 {
   constructor(type, startx, starty, gameRef)
@@ -29,7 +171,8 @@ class Item
     this.type.body.damping = .5;
     this.type.body.collideWorldBounds = false;
     this.pickedUp = false;
-    this.user = null; //Will be a sprite
+    this.user = null; //Will be a Fighter
+    this.previousUser = null; //Will be Fighter
     //These three variables help control the various situations that items can be in
     this.thrown = false;
     this.active = false;
@@ -78,6 +221,14 @@ class Item
         }
       }
     }
+    getActive()
+    {
+      return this.active;
+    }
+    getThrown()
+    {
+      return this.thrown;
+    }
     throwItem(holder) { //Takes the holder sprite as a parameter to calculate which direction he's facing
       console.log("You threw item!!");
       //this.spin = game.add.tween(this.type).to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, true);
@@ -86,6 +237,12 @@ class Item
       this.type.body.rotation = 0;
       this.type.body.velocity.x = 0;
       this.type.body.velocity.y = 0;
+      this.thrown = true;
+      this.active = true;
+      this.previousUser = this.user;
+      this.user = null;
+      console.log('item1.thrown: ' + this.thrown);
+      console.log('item1.active: ' + this.active);
       if(holder.character.scale.x < 0)
       { //If they user is facing left
           itemSound.play();
@@ -97,10 +254,9 @@ class Item
           this.thrown = true;
           this.active = true;
           this.inAir = true;
-        //  this.type.body.angularVelocity = 300;
-          //this.spin.resume();
+
       }
-      else
+      else //if facing to the left
       {
           itemSound.play();
           console.log("facing right");
@@ -112,8 +268,7 @@ class Item
           this.thrown = true;
           this.active = true;
           this.inAir = true;
-        //  this.type.body.angularVelocity = 300;
-          //this.spin.resume();
+
       }
     }
     itemCollision(target) //target is Fighter sprite who is getting hit by thrown item
@@ -125,7 +280,7 @@ class Item
         {
             target.hitVelocity += 200;
             target.character.body.velocity.y -= 250;
-            target.character.health += 10;
+            target.health += 10;
 
         }
         else
@@ -144,6 +299,7 @@ class Item
       //For now, respawn it default as a bottle
         this.inAir = true;
         this.user = null;
+        this.previousUser = null;
 
 
 //Depending on the random selection, spawn a random item
@@ -187,6 +343,7 @@ class Item
         this.type.body.DYNAMIC;
         this.type.body.collideWorldBounds = false;
         this.active = false;
+        this.thrown = false;
         this.type.angle = 0;
         this.type.body.rotation = 0;
     }
@@ -233,8 +390,8 @@ class Item
       else
       {
 
-          this.type.body.position.x = this.user.body.position.x;
-          this.type.body.position.y = this.user.body.position.y;
+          this.type.body.position.x = this.user.character.body.position.x;
+          this.type.body.position.y = this.user.character.body.position.y;
           //Can't follow user, check if it falls off the map
           if(this.type.body.position.x < -50 || this.type.body.position.x > 900)
           {
@@ -251,11 +408,16 @@ class Item
     }
 
     onGround() {
+      if(game.physics.arcade.collide(item1.type, platforms))
+      {
+        this.inAir = false;
+        if(!this.user)
+        {
+            this.user = null;
+        }
+        //console.log("user: " + this.user)
 
-      this.inAir = false;
-
-
-
+      }
     }
 
 
@@ -292,6 +454,53 @@ class Fighter {
        this.character = game.add.sprite(startx, starty, character);//player character variable to access sprite from phaser and all its properties character variable is name of spritesheet to use
        this.health = health;//player start health
        this.lives = lives;
+       this.attacking = false; //Controls when to register active hit frames
+       this.deltDamage = false;
+       this.attack = '';
+
+       switch(character)
+       {
+        case 'dude':
+          this.fighterStyle = {
+          font: "bold 32px Skranji", fill: '#0076b9', boundsAlignH: "left", boundsAlignV: "top"
+          };
+          this.damageBox = 'blueDamageBox';
+          break;
+        case 'chick':
+          this.fighterStyle = {
+          font: "bold 32px Skranji", fill: "#ff7000", boundsAlignH: "left", boundsAlignV: "top"
+          };
+          this.damageBox = 'orangeDamageBox';
+          break;
+        case 'dude':
+          this.fighterStyle = {
+          font: "bold 32px Skranji", fill: "#0076b9", boundsAlignH: "left", boundsAlignV: "top"
+          };
+          this.damageBox = 'blueDamageBox';
+          break;
+        case 'chick':
+          this.fighterStyle = {
+          font: "bold 32px Skranji", fill: "#ff7000", boundsAlignH: "left", boundsAlignV: "top"
+          };
+          this.damageBox = 'orangeDamageBox';
+          break;
+
+       }
+
+
+
+
+
+       //Allows an animation event to take place
+       this.inputLock = false;
+       //Cooldown for dash movement
+       this.dashCD = false;
+       //Cooldown for warlock kick
+       this.warlockCD = false;
+       //Cooldown for uppercut
+       this.uppercutCD = false;
+       //cooldown for all basic moves
+       this.basicCD = false;
 
        //Respawn Animation Activator Switch
        this.respawnSwitch = false;
@@ -320,7 +529,7 @@ class Fighter {
        this.stunCounter = 0;
 
        this.controlnum = controlnum;
-
+       console.log("controlnum: "+ this.controlnum)
        this.state = 0; //player state for state machine?
 
        this.jumps = 0;
@@ -330,40 +539,67 @@ class Fighter {
        this.AImode = 1;
        this.reaction = 0;
 
-           //  We need to enable physics on the player
+       //  We need to enable physics on the player
        game.physics.arcade.enable(this.character);
 
        //  Player physics properties. Give the little guy a slight bounce.
        this.character.body.bounce.y = 0;//0.2;
-       this.character.body.gravity.y = 1000;
+       this.character.body.gravity.y = 650;
        this.character.body.collideWorldBounds = false;
 
 
 	   this.character.body.setSize(30, 70, 10, 0)
 	   this.character.scale.x = 1.25;
-       this.character.scale.y = 1.25;
+     this.character.scale.y = 1.25;
 
        //Player animations
 
-	     this.character.animations.add('right', [ 3,4,5,6,7], 10, true);
+	     this.aniRight = this.character.animations.add('right', [ 3,4,5,6,7], 10, true);
+       this.aniRight.onComplete.add(this.walkEnd, this);
 
        //idle animation
-       this.character.animations.add('idle', [5, 6], 5, true);
+       this.aniIdle = this.character.animations.add('idle', [6], 5, true);
 
        //jump animation
-       this.character.animations.add('jump', [13, 14], 5, false); //need to adjust animation speed
-
+       this.aniJump = this.character.animations.add('jump', [13, 14], 5, false); //need to adjust animation speed
+       this.aniJump.onComplete.add(this.jumpEnd, this);
        //shield animation
-       this.character.animations.add('shield', [10], 5, false);
+       this.aniShield = this.character.animations.add('shield', [10], 5, false);
+       this.aniShield.onComplete.add(this.shieldEnd, this);
 
        //punch animations
-       this.character.animations.add('punch', [6, 7, 8], 10, false);
+      this.aniPunch = this.character.animations.add('punch', [8, 7, 6], 10, false);
+      this.aniPunch.onStart.add(this.punchStart, this);
+      this.aniPunch.onComplete.add(this.punchEnd, this);
 
        //kick
-       this.character.animations.add('kick', [11, 12, 12, 12], 10, false);
+       this.aniKick = this.character.animations.add('kick', [12, 12, 12, 11, 6], 10, false);
+       this.aniKick.onStart.add(this.kickStart, this);
+       this.aniKick.onComplete.add(this.kickEnd, this);
+
+       //dash
+       this.aniDash = this.character.animations.add('dash', [5], 10, false);
+       this.aniDash.onStart.add(this.dashStart, this);
+       this.aniDash.onComplete.add(this.dashEnd, this);
+
+       //Tatsumaki (i am weeb)
+       this.aniTatsu = this.character.animations.add('tatsumaki', [12, 15], 10, false);
+       this.aniTatsu.onStart.add(this.tatsuStart, this);
+       this.aniTatsu.onComplete.add(this.tatsuEnd, this);
+
+       //Uppercut (change 16 later for a better uppercut frame)
+       this.aniUppercut = this.character.animations.add('uppercut', [16, 16, 14, 13], 10, false);
+       this.aniUppercut.onStart.add(this.uppercutStart, this);
+       this.aniUppercut.onComplete.add(this.uppercutEnd, this);
+
+       //Slow warlock punch
+       this.aniWarlock = this.character.animations.add('warlock', [13, 13, 13, 13, 11, 12], 3, false);
+       this.aniWarlock.onStart.add(this.warlockStart, this);
+       this.aniWarlock.onComplete.add(this.warlockEnd, this);
 
        //player got hit animation
-       this.character.animations.add('ko', [12], 5, false);
+       this.aniKo = this.character.animations.add('ko', [12], 5, false);
+       this.aniKo.onComplete.add(this.koEnd, this);
 
 
        //this.controller1 = game.input.keyboard.addKeys({ 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R});
@@ -371,12 +607,12 @@ class Fighter {
     if(controlnum == 1)
      {
       //controller1 = new Object;
-      this.controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.E, 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'punch': Phaser.KeyCode.T, 'kick': Phaser.KeyCode.R, 'shield': Phaser.KeyCode.Y, 'special': Phaser.KeyCode.F});
+      this.controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.E, 'up': Phaser.KeyCode.W, 'down': Phaser.KeyCode.S, 'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D , 'basic': Phaser.KeyCode.T, 'special': Phaser.KeyCode.R, 'shield': Phaser.KeyCode.Y});
      }
     else if(controlnum == 2)
      {
      //controller1 = new Object;
-     this.controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.I, 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'punch': Phaser.KeyCode.P, 'kick': Phaser.KeyCode.O, 'shield': Phaser.KeyCode.OPEN_BRACKET, 'special': Phaser.KeyCode.J});
+     this.controller1 = game.input.keyboard.addKeys({ 'jump': Phaser.KeyCode.I, 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT , 'basic': Phaser.KeyCode.P, 'special': Phaser.KeyCode.O, 'shield': Phaser.KeyCode.OPEN_BRACKET});
      }
      else if(controlnum == -1)
      {
@@ -392,7 +628,30 @@ class Fighter {
        this.weapon1.bulletLifespan = 50; //50
        this.weapon1.bulletSpeed = 0; //0
        this.weapon1.fireRate = 100;
-       this.weapon1.trackSprite(this.character, 28, 40, true);
+       this.weapon1.trackSprite(this.character, 30, 20, true);
+
+       this.weaponKick = game.add.weapon(1, 'slash');
+       this.weaponKick.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
+       this.weaponKick.bulletLifespan = 50; //50
+       this.weaponKick.bulletSpeed = 0; //0
+       this.weaponKick.fireRate = 100;
+       this.weaponKick.trackSprite(this.character, 50, 50, true);
+
+       this.weaponUppercut = game.add.weapon(1, 'slash');
+       this.weaponUppercut.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
+       this.weaponUppercut.bulletLifespan = 50; //50
+       this.weaponUppercut.bulletSpeed = 0; //0
+       this.weaponUppercut.fireRate = 100;
+       this.weaponUppercut.trackSprite(this.character, 30, 10, true);
+
+       //used to create the trail effect for knockback
+       this.dustTrail = game.add.weapon(20, 'dust');
+       this.dustTrail.alpha = .5;
+       this.dustTrail.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
+       this.dustTrail.bulletLifespan = 500; //50
+       this.dustTrail.bulletSpeed = 0; //0
+       this.dustTrail.fireRate = 200;
+       this.dustTrail.trackSprite(this.character, 0, -50, true);
 
        this.stocks = game.add.group();
 //Stocks will now match up to character selected
@@ -403,12 +662,18 @@ class Fighter {
          {
            if(charName1 == 'dude')
            {
-             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player2cssIcon');
+            //sets up the cell for the damage icon and stocks
+             var damageBox1 = game.add.sprite(0, game.world.game.world.height - 75, this.damageBox);
+             damageBox1.scale.setTo(5.5,2.2);
+             var stock = this.stocks.create((0) + (30 * g), game.world.height - 25, 'blueStock');
              stock.anchor.setTo(.5,.5);
            }
            else if(charName1 == 'chick')
            {
-             var stock = this.stocks.create((game.world.width *.42) + (30 * g) + -300, 100, 'player1cssIcon');
+            //sets up the cell for the damage icon and stocks
+             var damageBox1 = game.add.sprite(0, game.world.game.world.height - 75, this.damageBox);
+             damageBox1.scale.setTo(5.5,2.2);
+             var stock = this.stocks.create((0) + (30 * g), game.world.height - 25, 'orangeStock');
              stock.anchor.setTo(.5,.5);
            }
          }
@@ -420,12 +685,18 @@ class Fighter {
          {
            if(charName2 == 'dude') //dude is blue, chick is orange
            {
-             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player2cssIcon');
+            //sets up the cell for the damage icon and stocks
+             var damageBox2 = game.add.sprite(650, game.world.game.world.height - 75, this.damageBox);
+             damageBox2.scale.setTo(5.5,2.2);
+             var stock = this.stocks.create((game.world.width *.85) + (30 * h), game.world.height - 25, 'blueStock');
              stock.anchor.setTo(.5,.5);
            }
            else if(charName2 == 'chick')
            {
-             var stock = this.stocks.create((game.world.width *.85) + (30 * h), 100, 'player1cssIcon');
+            //sets up the cell for the damage icon and stocks
+             var damageBox2 = game.add.sprite(650, game.world.game.world.height - 75, this.damageBox);
+             damageBox2.scale.setTo(5.5,2.2);
+             var stock = this.stocks.create((game.world.width *.85) + (30 * h), game.world.height - 25, 'orangeStock');
              stock.anchor.setTo(.5,.5);
            }
 
@@ -435,14 +706,737 @@ class Fighter {
        console.log("fighter made");
        //return this;
      }
+
+     getleft(){
+     	if(this.controlnum < 0){
+     		return this.controller1.leftpress;
+     	}
+     	else{
+     		return this.controller1.left.isDown;
+     	}
+
+     }
+     getright(){
+     	if(this.controlnum < 0){
+     		return this.controller1.rightpress;
+     	}
+     	else{
+     		return this.controller1.right.isDown;
+     	}
+
+     }
+     getup(){
+     	if(this.controlnum < 0){
+     		return this.controller1.uppress;
+     	}
+     	else{
+     		return this.controller1.up.isDown;
+     	}
+
+     }
+     getdown(){
+     	if(this.controlnum < 0){
+     		return this.controller1.downpress;
+     	}
+     	else{
+     		return this.controller1.down.isDown;
+     	}
+
+     }
+     geta(){
+     	if(this.controlnum < 0){
+     		return this.controller1.apress;
+     	}
+     	else{
+     		return this.controller1.basic.isDown;
+     	}
+
+     }
+     getb(){
+     	if(this.controlnum < 0){
+     		return this.controller1.bpress;
+     	}
+     	else{
+     		return this.controller1.special.isDown;
+     	}
+
+     }
+     getx(){
+     	if(this.controlnum < 0){
+     		return this.controller1.xpress;
+     	}
+     	else{
+     		return this.controller1.shield.isDown;
+     	}
+     }
+     gety(){
+     	if(this.controlnum < 0){
+     		return this.controller1.ypress;
+     	}
+     	else{
+     		return this.controller1.jump.isDown;
+     	}
+
+     }
+
+     punchStart () {
+       console.log("Punch start");
+       if(this.character.scale.x < 0) //If facing left, flip the angle of the hitbox
+       {
+         this.weapon1.bulletAngleOffset = 40;
+       }
+       else {
+          this.weapon1.bulletAngleOffset = -40;
+       }
+       this.attack = 'punch';
+       this.weapon1.fire();
+       this.attacking = true;
+       this.inputLock = true;
+     }
+     punchEnd () {
+       console.log("Punch end");
+       this.attacking = false;
+       this.deltDamage = false;
+       this.inputLock = false;
+       this.attack = '';
+       this.basicCD = 15;
+     }
+     kickStart() {
+       console.log("Kick start");
+       this.attacking = true;
+       this.attack = 'kick';
+       this.weaponKick.fire();
+       this.inputLock = true;
+     }
+     kickEnd() {
+       console.log("kick end");
+       this.attacking = false;
+       this.deltDamage = false;
+       this.inputLock = false;
+       this.attack = '';
+       this.basicCD = 25;
+     }
+     jumpEnd() {
+       this.aniIdle.play(10, false);
+     }
+     koEnd() {
+       this.aniIdle.play(10, false);
+       this.inputLock = false;
+     }
+     walkEnd() {
+       //this.aniIdle.play(10, false);
+     }
+     dashStart()
+     {
+      let direction;
+      if (this.controller1.right.isDown)
+      {
+        direction = 1;
+      }
+      else if (this.controller1.left.isDown)
+      {
+        direction = -1;
+      }
+      else
+      {
+        direction = 0;
+      }
+      this.character.body.position.x += direction * 100;
+      this.inputLock = true;
+     }
+     dashEnd()
+     {
+      this.aniIdle.play(10, false);
+      this.inputLock = false;
+      this.dashCD = 60;
+     }
+     tatsuStart()
+     {
+      this.attacking = true;
+      this.attack = 'tatsu';
+      this.weaponKick.fire();
+      this.inputLock = true;
+     }
+     tatsuEnd()
+     {
+      this.aniIdle.play(10, false);
+      this.attacking = false;
+      this.deltDamage = false;
+      this.inputLock = false;
+      this.attack = '';
+     }
+     uppercutStart()
+     {
+       if(this.character.scale.x < 0) //If facing left, flip the angle of the hitbox
+       {
+         this.weaponUppercut.bulletAngleOffset = 40;
+       }
+       else {
+          this.weaponUppercut.bulletAngleOffset = -40;
+       }
+      this.character.body.velocity.x = 50 * this.character.scale.x;
+      this.character.body.velocity.y -= 400;
+      this.attacking = true;
+      this.attack = 'uppercut';
+      this.weaponUppercut.fire();
+      this.inputLock = true;
+     }
+     uppercutEnd()
+     {
+      this.aniIdle.play(10, false);
+      this.attacking = false;
+      this.deltDamage = false;
+      this.inputLock = false;
+      this.attack = '';
+      this.uppercutCD = 60;
+     }
+     warlockStart()
+     {
+      this.inputLock = true;
+      this.attacking = true;
+      this.attack = 'warlock';
+     }
+     warlockEnd()
+     {
+      this.character.body.position.x += 200 * this.character.scale.x;
+      this.weaponKick.fire();
+      this.attacking = false;
+      this.deltDamage = false;
+      this.attack = '';
+      this.inputLock = false;
+      this.aniIdle.play(10, false);
+      this.warlockCD = 30;
+     }
+     shieldEnd()
+     {
+      this.aniIdle.play(10, false);
+     }
+
+
+      updateInput()
+      {
+      //Cooldown for attacks
+      if (this.dashCD != 0)
+      {
+        this.dashCD -= 1;
+      }
+      if (this.uppercutCD != 0)
+      {
+        this.uppercutCD -= 1;
+      }
+      if (this.warlockCD != 0)
+      {
+        this.warlockCD -= 1;
+      }
+      if (this.basicCD != 0)
+      {
+        this.basicCD -= 1;
+      }
+      //Cooldown for hit stun
+      if (this.stunCounter != 0)
+      {
+        this.stunCounter -= 1;
+      }
+        //update function to decrease/increase the hit velocity based on the original direction of the punch. The natural slowing down of hit velocity
+      if(this.hitVelocity < 0)
+      {
+        this.hitVelocity += 1;
+      }
+      else if (this.hitVelocity > 0)
+      {
+        this.hitVelocity -= 1;
+      }
+      else
+      {
+        this.hitVelocity = 0;
+      }
+
+
+      //control logic for virtual keys DO NOT DELETE THIS
+      /*
+      if(this.controlnum == -1 || this.controlnum == -2 ){
+
+
+
+        if (this.controller1.xpress && this.character.body.touching.down && this.stunCounter == 0 && this.hitVelocity == 0)
+        {
+            this.character.body.velocity.x = 0;
+            this.character.animations.play('shield');
+            this.shielding = true;
+            if(this.character.hasItem) //If he has an item, THROW IT!
+            {
+
+              item1.throwItem(this);
+
+              item1.user = null;
+              item1.pickedUp = false;
+              this.character.hasItem = false;
+
+            }
+
+        }
+        else if (this.controller1.apress && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && this.hitCD == 0)
+        {
+            //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+              this.character.body.velocity.x = -250 - this.moveSpeed;
+            }
+            else
+            {
+              this.character.body.velocity.x = 250 + this.moveSpeed;
+            }
+            this.character.animations.play('punch');
+            this.weapon1.fire();
+            //If really freaking close to item, and if he isnt holding something, use it!
+            if((item1.xDistCheck(this.character) < 50) && (item1.yDistCheck(this.character) < 100) && !(this.character.hasItem) && (item1.user == null))
+            {
+              item1.user = this.character;
+              item1.pickedUp = true;
+              this.character.hasItem = true;
+              console.log("close to item");
+
+
+            }
+
+            this.shielding = false;
+            this.hitSwitchPunch = true;
+
+        }
+        else if (this.controller1.bpress == true && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && this.hitCD == 0)
+        {
+            //  Move to the right
+
+            //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+              this.character.body.velocity.x = -350 - this.moveSpeed;
+            }
+            else
+            {
+              this.character.body.velocity.x = 350 + this.moveSpeed;
+            }
+            this.character.animations.play('kick');
+            //this.hitCD = 60;
+            this.weapon1.fire();
+
+            if(this.character.body.touching.down)
+            {
+              this.character.body.velocity.y = -200;
+            }
+            if(this.character.hasItem) //If he has an item, USE IT!
+            {
+
+              item1.useItem(this);
+
+              item1.user = null;
+              item1.pickedUp = false;
+              this.character.hasItem = false;
+
+            }
+          this.shielding = false;
+          this.hitSwitchKick = true;
+        }
+
+        else if (this.controller1.bpress && this.controller1.ypress)
+        {
+          console.log("Up Special");
+        }
+        else if (this.controller1.bpress && this.controller1.rightpress)
+        {
+          console.log("Right Special");
+        }
+        else if (this.controller1.bpress && this.controller1.leftpress)
+        {
+          console.log("Left Special");
+        }
+        else if (this.controller1.bpress && this.controller1.downpress)
+        {
+          console.log("Down Special");
+        }
+        else if (this.controller1.bpress)
+        {
+          console.log("Normal Special")
+        }
+
+        else if (this.controller1.ypress && this.jumps <= 5  && !(this.m < 120 && this.m != 0) && this.stunCounter == 0)
+        {
+            this.character.body.velocity.y = -350 + this.jumpSpeed;
+            jumpSound.play();
+            this.jumps += 1;
+            this.shielding = false;
+            this.character.animations.play('jump');
+        }
+        else if (this.controller1.leftpress && !(this.m < 120 && this.m != 0) && this.stunCounter == 0)
+        {
+
+            if(this.character.body.touching.down)
+            {
+              this.jumps = 0;
+          }
+
+            if (this.character.scale.x > 0 ){
+            this.character.scale.x *=-1;
+            this.weapon1.trackSprite(this.character, 28, -40, true);
+            }
+            if (this.character.body.touching.down)
+            {
+              this.character.body.velocity.x = -250 + this.hitVelocity;
+            }
+            else
+            {
+              this.character.body.velocity.x = -200 + this.hitVelocity;
+            }
+            //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
+            if (this.hitVelocity != 0)
+            {
+              if (this.hitVelocity + -125 < 0){
+                this.hitVelocity = 0;
+              }
+              else
+              {
+                this.hitVelocity += -125;
+              }
+            }
+            console.log(this);
+            this.character.animations.play('right');
+            this.shielding = false;
+        }
+        else if (this.controller1.rightpress && !(this.m < 120 && this.m != 0) && this.stunCounter == 0)
+        {
+            //  Move to the right
+            if(this.character.body.touching.down)
+            {
+              this.jumps = 0;
+          }
+            //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+            this.character.scale.x *=-1;
+            this.weapon1.trackSprite(this.character, 28, 40, true);
+            }
+            if (this.character.body.touching.down)
+            {
+              this.character.body.velocity.x = 250 + this.hitVelocity;
+            }
+            else
+            {
+              this.character.body.velocity.x = 200 + this.hitVelocity;
+            }
+            //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
+            if (this.hitVelocity != 0)
+            {
+              if (this.hitVelocity + 125 > 0){
+                this.hitVelocity = 0;
+              }
+              else
+              {
+                this.hitVelocity += 125;
+              }
+            }
+            this.character.animations.play('right');
+            this.shielding = false;
+        }
+
+        else
+        {
+            //Code that assigns the velocity of the player based on the current hitVelocity. Keeps track of jump count and determines the idle animation of the character
+          if (this.hitVelocity != 0)
+          {
+            this.character.body.velocity.x = this.hitVelocity;
+          }
+          else
+          {
+            this.character.body.velocity.x = 0;
+          }
+            if (this.stunCounter > 0)
+            {
+              this.character.animations.play('ko');
+            }
+            else
+            {
+              //this.character.animations.play('idle');
+            }
+            this.shielding = false;
+
+            if(this.character.body.touching.down)
+            {
+              this.jumps = 0;
+          }
+        }
+        if(this.controller1.apress && this.hitSwitchPunch)
+        {
+          this.hitCD = 15;
+          this.hitSwitchPunch = false;
+        }
+        if (this.controller1.bpress && this.hitSwitchKick)
+        {
+          this.hitCD = 15;
+          this.hitSwitchKick= false;
+        }
+          //console.log('end of vpad read');
+      }*/   //DO NOT DELETE THIS
+
+
+      //control logic for real keyboard
+      //else if(this.controlnum > 0){   <- Change to this when controller above is put back in
+      if(this.controlnum > 0){
+      //console.log("inside real key check");
+
+        if (this.getx() && this.character.body.touching.down && this.stunCounter == 0 && this.hitVelocity == 0 && !this.inputLock)
+        {
+            this.character.body.velocity.x = 0;
+            this.character.animations.play('shield');
+            this.shielding = true;
+            if(this.character.hasItem) //If he has an item, THROW IT!
+            {
+
+              item1.throwItem(this);
+
+              item1.user = null;
+              item1.pickedUp = false;
+              this.character.hasItem = false;
+
+            }
+
+        }
+        else if ( this.geta() && (this.controller1.right.isDown || this.controller1.left.isDown) && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && !this.inputLock && this.basicCD == 0)
+        {
+
+            //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+              this.character.body.velocity.x = -250 + this.moveSpeed;
+            }
+            else
+            {
+              this.character.body.velocity.x = 250 + this.moveSpeed;
+            }
+            this.aniPunch.play(10, false);
+
+            //this.hitCD = 30;
+            this.shielding = false;
+            this.hitSwitchPunch = true;
+            //Causes Player health to increase
+            //this.health += 1;
+        }
+        else if (this.geta() && this.getdown() && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && !this.inputLock && this.basicCD == 0)
+        {
+            //  Move to the right
+
+            //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+              this.character.body.velocity.x = -350 - this.moveSpeed;
+            }
+            else
+            {
+              this.character.body.velocity.x = 350 + this.moveSpeed;
+            }
+            this.aniKick.play(10, false);
+            //this.hitCD = 60;
+            //this.weapon1.fire();
+
+            if(this.character.body.touching.down)
+            {
+              this.character.body.velocity.y = -200;
+            }
+
+          this.shielding = false;
+          this.hitSwitchKick = true;
+        }
+        else if (this.geta() && this.getdown() == false && this.getright() == false && this.getleft() == false && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && !this.inputLock && this.basicCD == 0)
+        {
+          //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+              this.character.body.velocity.x = -250 + this.moveSpeed;
+            }
+            else
+            {
+              this.character.body.velocity.x = 250 + this.moveSpeed;
+            }
+            this.aniPunch.play(10, false);
+            if(this.character.hasItem) //If he has an item, USE IT!
+            {
+
+              item1.useItem(this);
+
+              item1.user = null;
+              item1.pickedUp = false;
+              this.character.hasItem = false;
+
+            }
+            //this.character.animations.play('punch');
+            //this.weapon1.fire();
+
+            //If really freaking close to item, and if he isnt holding something, use it!
+            if((item1.xDistCheck(this.character) < 50) && (item1.yDistCheck(this.character) < 100) && !(this.character.hasItem) && (item1.user == null))
+            {
+              item1.user = this;
+              item1.pickedUp = true;
+              this.character.hasItem = true;
+              console.log("close to item");
+            }
+
+
+            //this.hitCD = 30;
+            this.shielding = false;
+            this.hitSwitchPunch = true;
+            //Causes Player health to increase
+            //this.health += 1;
+        }
+
+        else if ( this.getb() && !this.inputLock && this.getup()  && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && this.uppercutCD == 0)
+        {
+        	//console.log("Up Special");
+          this.aniUppercut.play(10, false);
+        }
+        else if ( this.getb() && !this.inputLock && this.getright() && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && this.dashCD == 0)
+        {
+        	//console.log("Right Special");
+          this.aniDash.play(5, false);
+        }
+        else if ( this.getb() && !this.inputLock && this.getleft() && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && this.dashCD == 0)
+        {
+        	//console.log("Left Special");
+          this.aniDash.play(5, false);
+        }
+        else if ( this.getb() && !this.inputLock && this.getdown() && !(this.m < 120 && this.m != 0) && this.stunCounter == 0)
+        {
+        	//console.log("Down Special");
+          this.aniTatsu.play(7, false);
+        }
+        else if ( this.getb() && this.getleft == false && this.getright == false  && !this.inputLock && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && this.warlockCD == 0)
+        {
+        	//console.log("Normal Special")
+          this.aniWarlock.play(3, false);
+        }
+
+        //TODO: downDuration is still here, but in merge conflict it was gone, POSSIBLY REMOVE downDuration
+        else if (this.gety() && this.jumps <= 5 && this.controller1.jump.downDuration(80 + this.attackSpeed) && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && !this.inputLock)
+        {
+            this.character.body.velocity.y = -350 + this.jumpSpeed;
+            jumpSound.play();
+            this.jumps += 1;
+            this.shielding = false;
+            this.character.animations.play('jump');
+        }
+        else if (this.getleft() && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && !this.inputLock)
+        {
+
+            if(this.character.body.touching.down)
+            {
+              this.jumps = 0;
+          }
+
+            if (this.character.scale.x > 0 ){
+            this.character.scale.x *=-1;
+            this.weapon1.trackSprite(this.character, 30, -20, true);
+            this.weaponKick.trackSprite(this.character, 50, -50, true);
+            this.weaponUppercut.trackSprite(this.character, 30, -10, true);
+            }
+            if (this.character.body.touching.down)
+            {
+              this.character.body.velocity.x = -250 + this.hitVelocity;
+            }
+            else
+            {
+              this.character.body.velocity.x = -200 + this.hitVelocity;
+            }
+            //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
+            if (this.hitVelocity != 0)
+            {
+              if (this.hitVelocity + -125 < 0){
+                this.hitVelocity = 0;
+              }
+              else
+              {
+                this.hitVelocity += -125;
+              }
+            }
+            this.character.animations.play('right');
+            this.shielding = false;
+        }
+        else if (this.getright() && !(this.m < 120 && this.m != 0) && this.stunCounter == 0 && !this.inputLock)
+        {
+            //  Move to the right
+            if(this.character.body.touching.down)
+            {
+              this.jumps = 0;
+          }
+            //logic to change direction facing
+            if (this.character.scale.x < 0 ){
+            this.character.scale.x *=-1;
+            this.weapon1.trackSprite(this.character, 30, 20, true);
+            this.weaponKick.trackSprite(this.character, 50, 50, true);
+            this.weaponUppercut.trackSprite(this.character, 30, 10, true);
+            }
+            if (this.character.body.touching.down)
+            {
+              this.character.body.velocity.x = 250 + this.hitVelocity;
+            }
+            else
+            {
+              this.character.body.velocity.x = 200 + this.hitVelocity;
+            }
+            //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
+            if (this.hitVelocity != 0)
+            {
+              if (this.hitVelocity + 125 > 0){
+                this.hitVelocity = 0;
+              }
+              else
+              {
+                this.hitVelocity += 125;
+              }
+            }
+            this.character.animations.play('right');
+            this.shielding = false;
+        }
+
+        else
+        {
+            //Code that assigns the velocity of the player based on the current hitVelocity. Keeps track of jump count and determines the idle animation of the character
+          if (this.hitVelocity != 0)
+          {
+            this.character.body.velocity.x = this.hitVelocity;
+          }
+          else
+          {
+            this.character.body.velocity.x = 0;
+          }
+            if (this.stunCounter > 0)
+            {
+              this.character.animations.play('ko');
+
+              //If hit really hard, add a dust trail that depends on hit velocity
+              if(this.hitVelocity > 350 || this.hitVelocity < -350)
+              {
+                this.dustTrail.fire();
+              }
+
+            }
+            else
+            {
+              //this.character.animations.play('idle');
+            }
+            this.shielding = false;
+
+            if(this.character.body.touching.down)
+            {
+              this.jumps = 0;
+          }
+        }
+
+
+      }
+      //end of update input function
+      }
+
+
   }
 
 class lab extends Fighter {
     constructor(character,health,lives,startx,starty,controlnum) {
 
       super(character,health,lives,startx,starty,controlnum);
-      this.character.body.gravity.y = 1000;
-      console.log("we created the lab construtor");
+      this.character.body.gravity.y = 650;
+      //console.log("we created the lab construtor");
 
         this.jumpSpeed = 25;
         this.fallSpeed = 50;
@@ -458,8 +1452,8 @@ class dj extends Fighter {
     constructor(character,health,lives,startx,starty,controlnum) {
 
       super(character,health,lives,startx,starty,controlnum);
-      this.character.body.gravity.y = 1000;
-      console.log("we created the dj construtor");
+      this.character.body.gravity.y = 650;
+      //console.log("we created the dj construtor");
 
         this.jumpSpeed = 75;
         this.fallSpeed = 50;
@@ -476,596 +1470,182 @@ class dj extends Fighter {
 var playState={
 
 
-  hitPlayer1: function(){
+  hitPlayer1: function(attacking){
+    //console.log('inside hitplayer1');
+    let hitDmg = 0;
+    console.log("attack: " + Player2.attack);
+    if(!Player2.deltDamage && attacking && (game.physics.arcade.overlap(Player1.character, Player2.weapon1.bullets) || game.physics.arcade.overlap(Player1.character, Player2.weaponKick.bullets) || game.physics.arcade.overlap(Player1.character, Player2.weaponUppercut.bullets)))
+    {
+      switch(Player2.attack)
+      {
+        case 'punch':
+          console.log("Got to punch");
+          hitDmg = 9;
+          attackDistance = 2;
+          break;
+        case 'kick':
+          hitDmg = 15;
+          attackDistance = 10;
+          break;
+        case 'uppercut':
+          hitDmg = 35;
+          attackDistance = 70;
+          break;
+        case 'tatsu':
+          hitDmg = 10;
+          attackDistance = 25;
+          break;
+        case 'warlock':
+          hitDmg = 300;
+          attackDistance = 300;
+          break;
+        default:
+          console.log("No attacks went off, you have an error");
+      }
 
-	if (Player1.m == 0 && !Player1.shielding){
-    hitSound.play();
-    game.time.slowMotion = 4.0;
-		Player1.health += 5;
-		Player1.hitVelocity = Player2.character.scale.x * Player1.health * 2;
+console.log("hitDmg = " + hitDmg);
 
-         Player1.character.body.velocity.y = -(Math.pow(Player1.health, 1.25));
+  	if (Player1.m == 0 && !Player1.shielding){
+      hitSound.play();
+      //game.time.slowMotion = 4.0;
+  		Player1.health += hitDmg;
+  		Player1.hitVelocity = Player2.character.scale.x * Player1.health * 2 + attackDistance;
 
-        if (Player1.health >= 0 || Player1.health <= 75)
-      	{
-      		Player1.stunCounter = 60;
-      	}
-      	else if (Player1.health > 75 || Player1.health <= 150)
-      	{
-          Player1.stunCounter = 120;
-      	}
-      	else if(Player1.health > 150 || Player1.health < 200)
-      	{
-      		Player1.stunCounter = 300;
-      	}
-      	else
-      	{
-      		Player1.stunCounter = 450;
-      	}
-	}
+           Player1.character.body.velocity.y = -(Math.pow(Player1.health, 1.25) + attackDistance);
+
+          if (Player1.health >= 0 || Player1.health <= 75)
+        	{
+        		Player1.stunCounter = 60;
+        	}
+        	else if (Player1.health > 75 || Player1.health <= 150)
+        	{
+            Player1.stunCounter = 120;
+        	}
+        	else if(Player1.health > 150 || Player1.health < 200)
+        	{
+        		Player1.stunCounter = 300;
+        	}
+        	else
+        	{
+        		Player1.stunCounter = 450;
+        	}
+  	    }
+        Player2.deltDamage = true;
+     }
 },
 
-hitPlayer2: function(){
+hitPlayer2: function(attacking){
+  let hitDmg = 0;
+  let attackDistance = 0;
+  console.log("attack: " + Player1.attack)
+  if(!Player1.deltDamage && attacking && (game.physics.arcade.overlap(Player2.character, Player1.weapon1.bullets) || game.physics.arcade.overlap(Player2.character, Player1.weaponKick.bullets) || game.physics.arcade.overlap(Player2.character, Player1.weaponUppercut.bullets)))
+  {
+    switch(Player1.attack)
+    {
+      case 'punch':
+        console.log("Got to punch");
+        hitDmg = 9;
+        attackDistance = 2;
+        break;
+      case 'kick':
+        hitDmg = 15;
+        attackDistance = 10;
+        break;
+      case 'uppercut':
+        hitDmg = 35;
+        attackDistance = 70;
+        break;
+      case 'tatsu':
+        hitDmg = 10;
+        attackDistance = 25;
+        break;
+      case 'warlock':
+        hitDmg = 300;
+        attackDistance = 300;
+        break;
+      default:
+        console.log("No attacks went off, you have an error");
+    }
 
-	if (Player2.m == 0 && !Player2.shielding){
-      hitSound.play();
+console.log("hitDmg = " + hitDmg);
+  	if (Player2.m == 0 && !Player2.shielding){
+        hitSound.play();
 
-		Player2.health += 5;
-		Player2.hitVelocity = Player1.character.scale.x * Player2.health * 2;
+  		Player2.health += hitDmg;
+  		Player2.hitVelocity = Player1.character.scale.x * Player2.health * 2 + attackDistance;
 
-     Player2.character.body.velocity.y = -(Math.pow(Player2.health, 1.25));
-     if (Player2.health >= 0 || Player2.health <= 75)
-     {
-       Player2.stunCounter = 60;
-     }
-     else if (Player2.health > 75 || Player2.health <= 150)
-     {
-       Player2.stunCounter = 120;
-     }
-     else if(Player2.health > 150 || Player2.health < 200)
-     {
-       Player2.stunCounter = 300;
-     }
-     else
-     {
-       Player2.stunCounter = 450;
-     }
-	}
+       Player2.character.body.velocity.y = -(Math.pow(Player2.health, 1.25) + attackDistance);
+       if (Player2.health >= 0 || Player2.health <= 75)
+       {
+         Player2.stunCounter = 60;
+       }
+       else if (Player2.health > 75 || Player2.health <= 150)
+       {
+         Player2.stunCounter = 120;
+       }
+       else if(Player2.health > 150 || Player2.health < 200)
+       {
+         Player2.stunCounter = 300;
+       }
+       else
+       {
+         Player2.stunCounter = 450;
+       }
+  	}
+    Player1.deltDamage = true;
+  }
 },
 
 yHitVelocity: function(Fighter)
 {
   Fighter.character.body.velocity.y = -(Math.pow(Fighter.health, 1.25));
-  console.log("during call")
-},
-addSpin: function(item)
-{
-  console.log("added spin again");
-    //item.spin.to( { angle: '-1440' }, 2400, Phaser.Easing.Linear.None, false);
-
 },
 
-updateInput: function(Fighter,cooldownNum)
-{
-//Cooldown for attacking
-if (Fighter.hitCD != 0)
-{
-  Fighter.hitCD -= 1;
-}
-//Cooldown for hit stun
-if (Fighter.stunCounter != 0)
-{
-  Fighter.stunCounter -= 1;
-}
-  //update function to decrease/increase the hit velocity based on the original direction of the punch. The natural slowing down of hit velocity
-if(Fighter.hitVelocity < 0)
-{
-  Fighter.hitVelocity += 1;
-}
-else if (Fighter.hitVelocity > 0)
-{
-  Fighter.hitVelocity -= 1;
-}
-else
-{
-  Fighter.hitVelocity = 0;
-}
-
-
-//control logic for virtual keys
-if(Fighter.controlnum == -1 || Fighter.controlnum == -2 ){
-
-
-
-  if (Fighter.controller1.xpress && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
-  {
-      Fighter.character.body.velocity.x = 0;
-      Fighter.character.animations.play('shield');
-      Fighter.shielding = true;
-      if(Fighter.character.hasItem) //If he has an item, THROW IT!
-      {
-
-        item1.throwItem(Fighter);
-
-        item1.user = null;
-        item1.pickedUp = false;
-        Fighter.character.hasItem = false;
-
-      }
-
-  }
-  else if (Fighter.controller1.apress && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
-  {
-      //logic to change direction facing
-      if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -250 - Fighter.moveSpeed;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = 250 + Fighter.moveSpeed;
-      }
-      Fighter.character.animations.play('punch');
-      Fighter.weapon1.fire();
-      //If really freaking close to item, and if he isnt holding something, use it!
-      if((item1.xDistCheck(Fighter.character) < 50) && (item1.yDistCheck(Fighter.character) < 100) && !(Fighter.character.hasItem) && (item1.user == null))
-      {
-        item1.user = Fighter.character;
-        item1.pickedUp = true;
-        Fighter.character.hasItem = true;
-        console.log("close to item");
-
-
-      }
-
-      Fighter.shielding = false;
-      Fighter.hitSwitchPunch = true;
-
-  }
-  else if (Fighter.controller1.bpress == true && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
-  {
-      //  Move to the right
-
-      //logic to change direction facing
-      if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -350 - Fighter.moveSpeed;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = 350 + Fighter.moveSpeed;
-      }
-      Fighter.character.animations.play('kick');
-      //Fighter.hitCD = 60;
-      Fighter.weapon1.fire();
-
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.character.body.velocity.y = -200;
-      }
-      if(Fighter.character.hasItem) //If he has an item, USE IT!
-      {
-
-        item1.useItem(Fighter);
-
-        item1.user = null;
-        item1.pickedUp = false;
-        Fighter.character.hasItem = false;
-
-      }
-    Fighter.shielding = false;
-    Fighter.hitSwitchKick = true;
-  }
-
-  else if (Fighter.controller1.bpress && Fighter.controller1.ypress)
-  {
-    console.log("Up Special");
-  }
-  else if (Fighter.controller1.bpress && Fighter.controller1.rightpress)
-  {
-    console.log("Right Special");
-  }
-  else if (Fighter.controller1.bpress && Fighter.controller1.leftpress)
-  {
-    console.log("Left Special");
-  }
-  else if (Fighter.controller1.bpress && Fighter.controller1.downpress)
-  {
-    console.log("Down Special");
-  }
-  else if (Fighter.controller1.bpress)
-  {
-    console.log("Normal Special")
-  }
-
-  else if (Fighter.controller1.ypress && Fighter.jumps <= 5  && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
-  {
-      Fighter.character.body.velocity.y = -350 + Fighter.jumpSpeed;
-      jumpSound.play();
-      Fighter.jumps += 1;
-      Fighter.shielding = false;
-      Fighter.character.animations.play('jump');
-  }
-  else if (Fighter.controller1.leftpress && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
-  {
-
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.jumps = 0;
-    }
-
-      if (Fighter.character.scale.x > 0 ){
-      Fighter.character.scale.x *=-1;
-      Fighter.weapon1.trackSprite(Fighter.character, 28, -40, true);
-      }
-      if (Fighter.character.body.touching.down)
-      {
-        Fighter.character.body.velocity.x = -250 + Fighter.hitVelocity;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = -200 + Fighter.hitVelocity;
-      }
-      //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
-      if (Fighter.hitVelocity != 0)
-      {
-        if (Fighter.hitVelocity + -125 < 0){
-          Fighter.hitVelocity = 0;
-        }
-        else
-        {
-          Fighter.hitVelocity += -125;
-        }
-      }
-      console.log(Fighter);
-      Fighter.character.animations.play('right');
-      Fighter.shielding = false;
-  }
-  else if (Fighter.controller1.rightpress && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
-  {
-      //  Move to the right
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.jumps = 0;
-    }
-      //logic to change direction facing
-      if (Fighter.character.scale.x < 0 ){
-      Fighter.character.scale.x *=-1;
-      Fighter.weapon1.trackSprite(Fighter.character, 28, 40, true);
-      }
-      if (Fighter.character.body.touching.down)
-      {
-        Fighter.character.body.velocity.x = 250 + Fighter.hitVelocity;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = 200 + Fighter.hitVelocity;
-      }
-      //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
-      if (Fighter.hitVelocity != 0)
-      {
-        if (Fighter.hitVelocity + 125 > 0){
-          Fighter.hitVelocity = 0;
-        }
-        else
-        {
-          Fighter.hitVelocity += 125;
-        }
-      }
-      Fighter.character.animations.play('right');
-      Fighter.shielding = false;
-  }
-
-  else
-  {
-      //Code that assigns the velocity of the player based on the current hitVelocity. Keeps track of jump count and determines the idle animation of the character
-    if (Fighter.hitVelocity != 0)
-    {
-      Fighter.character.body.velocity.x = Fighter.hitVelocity;
-    }
-    else
-    {
-      Fighter.character.body.velocity.x = 0;
-    }
-      if (Fighter.stunCounter > 0)
-      {
-        Fighter.character.animations.play('ko');
-      }
-      else
-      {
-        //Fighter.character.animations.play('idle');
-      }
-      Fighter.shielding = false;
-
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.jumps = 0;
-    }
-  }
-  if(Fighter.controller1.apress && Fighter.hitSwitchPunch)
-  {
-    Fighter.hitCD = 15;
-    Fighter.hitSwitchPunch = false;
-  }
-  if (Fighter.controller1.bpress && Fighter.hitSwitchKick)
-  {
-    Fighter.hitCD = 15;
-    Fighter.hitSwitchKick= false;
-  }
-    //console.log('end of vpad read');
-}
-
-
-//control logic for real keyboard
-else if(Fighter.controlnum > 0){
-//console.log("inside real key check");
-
-  if (Fighter.controller1.shield.isDown && Fighter.character.body.touching.down && Fighter.stunCounter == 0 && Fighter.hitVelocity == 0)
-  {
-      Fighter.character.body.velocity.x = 0;
-      Fighter.character.animations.play('shield');
-      Fighter.shielding = true;
-      if(Fighter.character.hasItem) //If he has an item, THROW IT!
-      {
-
-        item1.throwItem(Fighter);
-
-        item1.user = null;
-        item1.pickedUp = false;
-        Fighter.character.hasItem = false;
-
-      }
-
-  }
-  else if (Fighter.controller1.punch.isDown && Fighter.controller1.punch.downDuration(80 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
-  {
-      //logic to change direction facing
-      if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -250 + Fighter.moveSpeed;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = 250 + Fighter.moveSpeed;
-      }
-      Fighter.character.animations.play('punch');
-      Fighter.weapon1.fire();
-
-      //If really freaking close to item, and if he isnt holding something, use it!
-      if((item1.xDistCheck(Fighter.character) < 50) && (item1.yDistCheck(Fighter.character) < 100) && !(Fighter.character.hasItem) && (item1.user == null))
-      {
-        item1.user = Fighter.character;
-        item1.pickedUp = true;
-        Fighter.character.hasItem = true;
-        console.log("close to item");
-
-
-      }
-
-
-      //Fighter.hitCD = 30;
-      Fighter.shielding = false;
-      Fighter.hitSwitchPunch = true;
-      //Causes Player health to increase
-      //Fighter.health += 1;
-  }
-  else if (Fighter.controller1.kick.isDown && Fighter.controller1.kick.downDuration(200 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0 && Fighter.hitCD == 0)
-  {
-      //  Move to the right
-
-      //logic to change direction facing
-      if (Fighter.character.scale.x < 0 ){
-        Fighter.character.body.velocity.x = -350 - Fighter.moveSpeed;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = 350 + Fighter.moveSpeed;
-      }
-      Fighter.character.animations.play('kick');
-      //Fighter.hitCD = 60;
-      Fighter.weapon1.fire();
-
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.character.body.velocity.y = -200;
-      }
-      if(Fighter.character.hasItem) //If he has an item, USE IT!
-      {
-
-        item1.useItem(Fighter);
-
-        item1.user = null;
-        item1.pickedUp = false;
-        Fighter.character.hasItem = false;
-
-      }
-    Fighter.shielding = false;
-    Fighter.hitSwitchKick = true;
-  }
-
-  else if (Fighter.controller1.special.isDown && Fighter.controller1.up.isDown)
-  {
-  	console.log("Up Special");
-  }
-  else if (Fighter.controller1.special.isDown && Fighter.controller1.right.isDown)
-  {
-  	console.log("Right Special");
-  }
-  else if (Fighter.controller1.special.isDown && Fighter.controller1.left.isDown)
-  {
-  	console.log("Left Special");
-  }
-  else if (Fighter.controller1.special.isDown && Fighter.controller1.down.isDown)
-  {
-  	console.log("Down Special");
-  }
-  else if (Fighter.controller1.special.isDown)
-  {
-  	console.log("Normal Special")
-  }
-
-  else if (Fighter.controller1.jump.isDown && Fighter.jumps <= 5 && Fighter.controller1.jump.downDuration(80 + Fighter.attackSpeed) && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
-  {
-      Fighter.character.body.velocity.y = -350 + Fighter.jumpSpeed;
-      jumpSound.play();
-      Fighter.jumps += 1;
-      Fighter.shielding = false;
-      Fighter.character.animations.play('jump');
-  }
-  else if (Fighter.controller1.left.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
-  {
-
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.jumps = 0;
-    }
-
-      if (Fighter.character.scale.x > 0 ){
-      Fighter.character.scale.x *=-1;
-      Fighter.weapon1.trackSprite(Fighter.character, 28, -40, true);
-      }
-      if (Fighter.character.body.touching.down)
-      {
-        Fighter.character.body.velocity.x = -250 + Fighter.hitVelocity;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = -200 + Fighter.hitVelocity;
-      }
-      //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
-      if (Fighter.hitVelocity != 0)
-      {
-        if (Fighter.hitVelocity + -125 < 0){
-          Fighter.hitVelocity = 0;
-        }
-        else
-        {
-          Fighter.hitVelocity += -125;
-        }
-      }
-      Fighter.character.animations.play('right');
-      Fighter.shielding = false;
-  }
-  else if (Fighter.controller1.right.isDown && !(Fighter.m < 120 && Fighter.m != 0) && Fighter.stunCounter == 0)
-  {
-      //  Move to the right
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.jumps = 0;
-    }
-      //logic to change direction facing
-      if (Fighter.character.scale.x < 0 ){
-      Fighter.character.scale.x *=-1;
-      Fighter.weapon1.trackSprite(Fighter.character, 28, 40, true);
-      }
-      if (Fighter.character.body.touching.down)
-      {
-        Fighter.character.body.velocity.x = 250 + Fighter.hitVelocity;
-      }
-      else
-      {
-        Fighter.character.body.velocity.x = 200 + Fighter.hitVelocity;
-      }
-      //Determines the hitvelocity of the player based on inputs from keyboard to decrease the velocity
-      if (Fighter.hitVelocity != 0)
-      {
-        if (Fighter.hitVelocity + 125 > 0){
-          Fighter.hitVelocity = 0;
-        }
-        else
-        {
-          Fighter.hitVelocity += 125;
-        }
-      }
-      Fighter.character.animations.play('right');
-      Fighter.shielding = false;
-  }
-
-  else
-  {
-      //Code that assigns the velocity of the player based on the current hitVelocity. Keeps track of jump count and determines the idle animation of the character
-    if (Fighter.hitVelocity != 0)
-    {
-      Fighter.character.body.velocity.x = Fighter.hitVelocity;
-    }
-    else
-    {
-      Fighter.character.body.velocity.x = 0;
-    }
-      if (Fighter.stunCounter > 0)
-      {
-        Fighter.character.animations.play('ko')
-        ;
-      }
-      else
-      {
-        //Fighter.character.animations.play('idle');
-      }
-      Fighter.shielding = false;
-
-      if(Fighter.character.body.touching.down)
-      {
-        Fighter.jumps = 0;
-    }
-  }
-  if(Fighter.controller1.punch.isUp && Fighter.hitSwitchPunch)
-  {
-    Fighter.hitCD = 15;
-    Fighter.hitSwitchPunch = false;
-  }
-  if (Fighter.controller1.kick.isUp && Fighter.hitSwitchKick)
-  {
-    Fighter.hitCD = 15;
-    Fighter.hitSwitchKick= false;
-  }
-
-}
-//console.log("end of key check");
-//end of update input function
-},
-
-
-
-
-  respawn: function(Fighter){
-      console.log("Beginning of respawn");
+respawn: function(Fighter){
       game.time.events.add(Phaser.Timer.SECOND, this.playRespawnSound, this);
-
 
       if(Fighter.controlnum == 1 ){
           console.log("controlnum = 1");
           Fighter.character.x = 200;
-          Fighter.character.y = 300;
+          Fighter.character.y = 230;
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
+          Fighter.inputLock = false;
       }
 
       else if(Fighter.controlnum == 2 ){
           console.log("controlnum = 2");
           Fighter.character.x = 600;
-          Fighter.character.y = 300;
+          Fighter.character.y = 230;
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
+          Fighter.inputLock = false;
       }
 
       else if(Fighter.controlnum == -1 ){
           console.log("controlnum = -1");
           //Fighter.character.body.position.x = 200;
           Fighter.character.x = 200;
-          Fighter.character.y = 300;
+          Fighter.character.y = 230;
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
+          Fighter.inputLock = false;
       }
       else if(Fighter.controlnum == -2 ){
           console.log("controlnum = -2");
           //Fighter.character.body.position.x = 200;
           Fighter.character.x = 600;
-          Fighter.character.y = 300;
+          Fighter.character.y = 230;
           Fighter.respawnSwitch = true;
           Fighter.m = 0;
+          Fighter.inputLock = false;
       }
 
       Fighter.health = 0;
       Fighter.lives += -1;
       Fighter.character.body.velocity.x = 0;
       Fighter.character.body.velocity.y = 0;
+      Fighter.hitVelocity = 0;
   },
 
   respawnEvent: function(Fighter){
@@ -1075,15 +1655,19 @@ else if(Fighter.controlnum > 0){
     //Invisible moment
     if (Fighter.m < 60 && Fighter.m != 0){
       Fighter.character.body.gravity.y = 0;
+      Fighter.character.body.velocity.x = 0;
+      Fighter.hitVelocity = 0;
       Fighter.character.visible = false;
     }
     //Book Crashing down Animation
     else if(Fighter.m >= 60 && Fighter.m < 120){
-      Fighter.character.body.gravity.y = 800;
+      Fighter.character.body.gravity.y = 400;
+      Fighter.character.body.velocity.x = 0;
+      Fighter.hitVelocity = 0;
       Fighter.character.visible = true;
     }
     else{
-      Fighter.character.body.gravity.y = 1000;
+      Fighter.character.body.gravity.y = 650;
     }
     //Makes character alpha to signify invulnerability
     if (Fighter.m <= 300){
@@ -1177,6 +1761,7 @@ playerHitStun: function(Fighter)
 
       //Play music
       music = game.add.audio('allstar');
+      music.volume = 0.5;
       music.loopFull();
 
 
@@ -1195,7 +1780,7 @@ playerHitStun: function(Fighter)
       platforms.friction = 100;
 
       // Create the ground.
-      var ground = platforms.create(110, game.world.height - 30, 'ground');
+      var ground = platforms.create(110, game.world.height - 100, 'ground');
 
       //  Scale it to fit the width of the game (the original sprite is ? in size)
       ground.scale.setTo(18, 1);
@@ -1262,8 +1847,6 @@ else {
   controlOptionVpad = 1;
 }
 
-
-
 if(charName1 == 'dude')
 {
   Player1 =  new dj(charName1,  0, 3, game.world.width*0.25,game.world.height*0.5,controlOptionVpad);
@@ -1303,7 +1886,7 @@ else
 //console.log(Player1.controlnum);
 
 //Create an item
-item1 = new Item('gator', game.world.width * .5, game.world.height * .5, this);
+item1 = new Item('bottle', game.world.width * .5, game.world.height * .5, this);
 
 
 if(Player1.controlnum == -1){
@@ -1372,13 +1955,19 @@ if(Player1.controlnum == -1){
 
       //mob = new crowd(0,0);
 
-      healthtext1 = game.add.text(0,0, `DMG ${Player1.health}`,style);
 
-      healthtext2 = game.add.text(650,0, `DMG ${Player2.health}`,style);
+      healthtext1 = game.add.text(0, game.world.height - 75, `DMG ${Player1.health}`,Player1.fighterStyle);
+      healthtext1.stroke = '#ffffff';
+      healthtext1.strokeThickness = 4;
 
-      livetext1 = game.add.text(0,30, `Lives ${Player1.lives}`,style);
+      healthtext2 = game.add.text(650, game.world.height - 75, `DMG ${Player2.health}`,Player2.fighterStyle);
+      healthtext2.stroke = '#ffffff';
+      healthtext2.strokeThickness = 4;
 
-      livetext2 = game.add.text(650,30, `Lives ${Player2.lives}`,style);
+      //livetext1 = game.add.text(0, game.world.height - 50, ``,style2);
+
+      //livetext2 = game.add.text(650, game.world.height - 50, `Lives ${Player2.lives}`,style2);
+      //livetext2 = game.add.text(650, game.world.height - 50, ``,style2);
 
       nameText1 = game.add.text(0, 0, "P1", style);
       nameText2 = game.add.text(0, 0, "P2", style);
@@ -1461,6 +2050,7 @@ timerText.anchor.setTo(.5,.5);
 
   update: function() {
     //console.log('Inside update function');
+    console.log("controlOptionAI: " + controlOptionAI);
     game.physics.arcade.overlap(Player1.character, this.win, this.Win, null, this);
     game.physics.arcade.overlap(Player2.character, this.win, this.Win, null, this);
 
@@ -1469,21 +2059,55 @@ timerText.anchor.setTo(.5,.5);
     game.physics.arcade.collide(Player2.character, platforms);
     game.physics.arcade.collide(Player1.character,Player2.character);
     //add physics for item (eventually just add items to a group and use collision detection for the group)
-    game.physics.arcade.collide(item1.type, platforms, item1.onGround() );
+    game.physics.arcade.collide(item1.type, platforms, item1.onGround());
 
     //using overlap to calculate the knockback when an item is thrown since we dont want the items trajectory to change
     //This is always colliding? even when i replace it with random stuff like player1.weapon1.bullets
 
+    if(item1.user)
+    {
+      console.log('item1.user.controlnum: '+ item1.user.controlnum);
+      console.log('item1.thrown: ' + item1.thrown);
+      console.log('item1.active: ' + item1.active);
+
+    }
+
+    //Item Collision, makes sure that the item you hold doesnt hit you when you throw it, but only hits the other person
+    //Item must be active(can only hit you once), and thrown for the collision to go off
+    if(item1.thrown && item1.getActive() && item1.getThrown())
+    {
+
+      if(item1.previousUser.controlnum == Player1.controlnum && !Player2.respawnSwitch) //if the user is the the person colliding with the item(Player1)
+      {
+        game.physics.arcade.overlap(Player2.character, item1.type, item1.itemCollision(Player2), null, this);
+      }
+      else if(item1.previousUser.controlnum == Player2.controlnum && !Player1.respawnSwitch) //if the user is the the person colliding with the item(Player2)
+      {
+        game.physics.arcade.overlap(Player1.character, item1.type, item1.itemCollision(Player1), null, this);
+      }
+    }
 
 
-      game.physics.arcade.overlap(Player2.character, item1.type, item1.itemCollision(Player2), null, this);
+    //hitbox collision for player 2, we pass the type of hit into the hit player function
+    if(Player1.attacking)
+    {
+      game.physics.arcade.overlap(Player1.weapon1.bullets, Player2.character, this.hitPlayer2(Player1.attacking));
+      game.physics.arcade.overlap(Player1.weaponKick.bullets, Player2.character, this.hitPlayer2(Player1.attacking));
+      game.physics.arcade.overlap(Player1.weaponUppercut.bullets, Player2.character, this.hitPlayer2(Player1.attacking));
+    }
+    else if(Player2.attacking)
+    {
+      //hitbox collision for player 1, we pass the type of hit into the hit player function
+  	  game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1(Player2.attacking));
+      game.physics.arcade.overlap(Player2.weaponKick.bullets, Player1.character, this.hitPlayer1(Player2.attacking));
+      game.physics.arcade.overlap(Player2.weaponUppercut.bullets, Player1.character, this.hitPlayer1(Player2.attacking));
+    }
 
-
-    game.physics.arcade.overlap(Player1.weapon1.bullets, Player2.character, this.hitPlayer2);
-	   game.physics.arcade.overlap(Player2.weapon1.bullets, Player1.character, this.hitPlayer1);
-
+    //Name tag align/follow
     nameText1.alignTo(Player1.character, Phaser.TOP, 16);
     nameText2.alignTo(Player2.character,Phaser.TOP, 16);
+
+    //item align/follow
     if(item1.type != null)
     {
       if(item1.inAir)
@@ -1510,15 +2134,15 @@ timerText.anchor.setTo(.5,.5);
     }
 
       //console.log("echo");
-    this.updateInput(Player1,cooldown1);
-    this.updateInput(Player2,cooldown2);
+    Player1.updateInput();
+    Player2.updateInput();
 
       //console.log("echo");
     healthtext1.text = `DMG ${Math.ceil(Player1.health)} %`;
     healthtext2.text = `DMG ${Math.ceil(Player2.health)} %`;
 
-    livetext1.text = `Lives ${Player1.lives}`;
-    livetext2.text = `Lives ${Player2.lives}`;
+    //livetext1.text = `Lives ${Player1.lives}`;
+    //livetext2.text = `Lives ${Player2.lives}`;
 
     this.KO(Player1);
     this.KO(Player2);
@@ -1670,7 +2294,7 @@ AIplay: function(Fighter1, Fighter2){
    	    Fighter1.bpress = false;//special button
 		Fighter1.xpress = false;//jump button
 		Fighter1.ypress = false;//block button
-		console.log("reacting to nothing");
+		//console.log("reacting to nothing");
 		return;
 	}
 
