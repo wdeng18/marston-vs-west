@@ -94,6 +94,7 @@ var charName1 = "";
 var charName2 = "";
 var charSelected1 = false;
 var charSelected2 = false;
+var botSelected = false;
 var charPortrait1;
 var charPortrait2;
 var dudeIcon;
